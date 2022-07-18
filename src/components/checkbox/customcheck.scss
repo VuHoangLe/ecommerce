@@ -1,0 +1,46 @@
+@use '../../scss/' as *;
+
+.customCheck {
+    @include flex(center, flex-start);
+
+    cursor: pointer;
+
+    @include hover {
+        &:hover {
+            color: $main-color;
+        }
+    }
+
+    input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        width: 0;
+        height: 0;
+    }
+
+    &__checkmark {
+        width: 15px;
+        height: 15px;
+
+        margin-right: 10px;
+
+        border: 1px solid $txt-second-color;
+
+        i {
+            transform: scale(0);
+            transition: transform 0.2s ease;
+        }
+    }
+
+    input:checked ~ &__checkmark {
+        background-color: $main-color;
+        color: $txt-white;
+
+        border: 1px solid $main-color;
+    }
+
+    input:checked ~ &__checkmark > i {
+        transform: scale(1);
+    }
+}

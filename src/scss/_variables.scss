@@ -11,7 +11,7 @@ $btn-main-color: #fff;
 $header-height: 170px;
 $header-tablet-height: 70px;
 $header-mobile-height: 40px;
-$header-shrink-height: 40px;
+$header-shrink-height: 70px;
 
 $box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 
@@ -28,3 +28,18 @@ $mobile-width: 600px;
 $tablet-width: 1024px;
 
 $numbers: (0, 1, 2, 3, 4, 5, 6, 7, 8);
+
+$primary-font: 'Montserrat', sans-serif;
+$second-font: 'M PLUS Rounded 1c', sans-serif;
+
+@keyframes border {
+    0% {
+        border-radius: 58% 42% 38% 62% / 42% 55% 45% 58%;
+    }
+    50% {
+        border-radius: 31% 69% 59% 41% / 28% 24% 76% 72%;
+    }
+    100% {
+        border-radius: 58% 42% 38% 62% / 42% 55% 45% 58%;
+    }
+}

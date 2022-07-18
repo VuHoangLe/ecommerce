@@ -1,0 +1,72 @@
+@use '../../scss/' as *;
+
+.product-card {
+    text-align: center;
+    margin-bottom: 30px;
+
+    &__image {
+        position: relative;
+
+        padding-top: 100%;
+        margin-bottom: 30px;
+
+        overflow: hidden;
+
+        img {
+            position: absolute;
+            top: 0;
+            left: 50%;
+
+            transform: translateX(-50%);
+            height: 100%;
+
+            &:nth-child(1) {
+                transform: translateX(-50%) scale(1);
+                transition: transform 0.3s ease;
+            }
+
+            &:nth-child(2) {
+                transform: translateX(-50%) scale(0);
+            }
+        }
+        @include hover {
+            &:hover img {
+                &:nth-child(1) {
+                    transform: translateX(-50%) scale(0);
+                }
+
+                &:nth-child(2) {
+                    transform: translateX(-50%) scale(1);
+                    transition: transform 0.6s ease;
+                }
+            }
+        }
+    }
+
+    &__name {
+        margin-bottom: 10px;
+        color: $txt-second-color;
+
+        font-size: 1.4rem;
+        font-weight: 400;
+    }
+
+    &__price {
+        color: $txt-main-color;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+
+        &__old {
+            color: $txt-second-color;
+            margin-left: 20px;
+            font-weight: 300;
+        }
+    }
+
+    &__btn {
+        @include tablet {
+            display: none;
+        }
+    }
+}
