@@ -1,7 +1,7 @@
 @use '../../scss/' as *;
 
 .btn {
-    font-size: 2.5rem;
+    font-size: 1.8rem;
     font-weight: 600;
 
     text-transform: uppercase;
@@ -24,13 +24,13 @@
     }
 
     &__txt {
-        padding: 1rem 2rem;
+        padding: 1rem 1.4rem;
     }
 
     &__icon {
         @include flex(center, center);
 
-        font-size: 2rem;
+        font-size: 1.8rem;
 
         position: absolute;
         top: 0;
@@ -57,6 +57,10 @@
     }
 
     &-sm &__txt {
-        padding: 1rem 1.5rem;
+        padding: 1rem 1.2rem;
+    }
+
+    &-block {
+        width: 100%;
     }
 }

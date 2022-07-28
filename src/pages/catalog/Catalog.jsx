@@ -3,15 +3,15 @@ import React, { useCallback, useEffect, useState } from 'react';
 import './catalog.scss';
 
 import Helmet from '../../components/Helmet';
-import Grid from '../../components/grid/Grid';
-import ProductCard from '../../components/product/Product';
-import CatalogFilterWidget from './CatalogFilterWidget';
-import Button from '../../components/button/Button';
+import CatalogFilterWidget, { CatalogFilterButton } from './CatalogFilterWidget';
+import InfinityList from '../../components/InfinityList';
 
 import producData from '../../assets/fake-data/products';
 import categoryData from '../../assets/fake-data/category';
 import productColor from '../../assets/fake-data/product-color';
 import productSize from '../../assets/fake-data/product-size';
+import { useRef } from 'react';
+import Button from '../../components/button/Button';
 
 function Catalog() {
     const initFilter = {
@@ -70,7 +70,7 @@ function Catalog() {
                 const check = e.colors.find((color) => {
                     return filter.color.includes(color);
                 });
-                return check !== undefined;
+                return check;
             });
         }
 
@@ -91,35 +91,46 @@ function Catalog() {
         setFilter(initFilter);
     };
 
+    const filterRef = useRef(null);
+    const controlFilter = () => {
+        filterRef.current.classList.toggle('active');
+    };
+
     return (
         <Helmet title="Catalog">
             <div className="catalog">
-                <div className="catalog__filter">
-                    <CatalogFilterWidget title="CATEGORY" data={categoryData} filterCheck={filterCheck} />
-                    <CatalogFilterWidget title="COLOR" data={productColor} filterCheck={filterCheck} />
-                    <CatalogFilterWidget title="SIZE" data={productSize} filterCheck={filterCheck} />
-
-                    <div className="catalog__filter__widget">
-                        <div className="catalog__filter__widget__content">
-                            <Button size="sm" onClick={clearFilter}>
-                                Remove filter
-                            </Button>
-                        </div>
+                <div className="catalog__filter" ref={filterRef}>
+                    <div className="catalog__filter__close" onClick={controlFilter}>
+                        <i className="bx bx-left-arrow-alt"></i>
                     </div>
+                    <CatalogFilterWidget
+                        title="CATEGORY"
+                        data={categoryData}
+                        filterCheck={filterCheck}
+                        filter={filter.category}
+                    />
+                    <CatalogFilterWidget
+                        title="COLOR"
+                        data={productColor}
+                        filterCheck={filterCheck}
+                        filter={filter.color}
+                    />
+                    <CatalogFilterWidget
+                        title="SIZE"
+                        data={productSize}
+                        filterCheck={filterCheck}
+                        filter={filter.size}
+                    />
+
+                    <CatalogFilterButton size="sm" clearFilter={clearFilter} />
+                </div>
+                <div className="catalog__filter__toggle">
+                    <Button size="sm" onClick={controlFilter}>
+                        Filter
+                    </Button>
                 </div>
                 <div className="catalog__content">
-                    <Grid col={3} mdCol={2} smCol={1} gap={20}>
-                        {products.map((item, index) => (
-                            <ProductCard
-                                key={index}
-                                img01={item.image01}
-                                img02={item.image02}
-                                name={item.title}
-                                slug={item.slug}
-                                price={item.price}
-                            />
-                        ))}
-                    </Grid>
+                    <InfinityList data={products} perload={6} />
                 </div>
             </div>
         </Helmet>

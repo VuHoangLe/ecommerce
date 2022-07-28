@@ -38,6 +38,7 @@ const products = [
     {
         title: 'Áo thun Dinosaur 01',
         price: 320,
+        oldPrice: 400,
         image01: product_01_image_01,
         image02: product_01_image_02,
         categorySlug: 'ao-thun',
@@ -50,6 +51,7 @@ const products = [
     {
         title: 'Áo thun Dinosaur 02',
         price: 380,
+        oldPrice: 510,
         image01: product_02_image_01,
         image02: product_02_image_02,
         categorySlug: 'ao-thun',
@@ -62,6 +64,7 @@ const products = [
     {
         title: 'Áo thun Dinosaur 03',
         price: 450,
+        oldPrice: 580,
         image01: product_03_image_01,
         image02: product_03_image_02,
         categorySlug: 'ao-thun',
@@ -74,6 +77,7 @@ const products = [
     {
         title: 'Áo thun Polo 04',
         price: 200,
+        oldPrice: 420,
         image01: product_04_image_01,
         image02: product_04_image_02,
         categorySlug: 'ao-thun',
@@ -86,6 +90,7 @@ const products = [
     {
         title: 'Áo thun Polo 05',
         price: 280,
+        oldPrice: 410,
         image01: product_05_image_01,
         image02: product_05_image_02,
         categorySlug: 'ao-thun',
@@ -98,6 +103,7 @@ const products = [
     {
         title: 'Áo thun Polo 06',
         price: 310,
+        oldPrice: 350,
         image01: product_06_image_01,
         image02: product_06_image_02,
         categorySlug: 'ao-thun',
@@ -110,6 +116,7 @@ const products = [
     {
         title: 'Áo somi caro 07',
         price: 330,
+        oldPrice: 510,
         image01: product_07_image_01,
         image02: product_07_image_02,
         categorySlug: 'ao-somi',
@@ -122,6 +129,7 @@ const products = [
     {
         title: 'Áo somi dài tay 08',
         price: 410,
+        oldPrice: 560,
         image01: product_08_image_01,
         image02: product_08_image_02,
         categorySlug: 'ao-somi',
@@ -134,6 +142,7 @@ const products = [
     {
         title: 'Áo somi tay dài 09',
         price: 440,
+        oldPrice: 610,
         image01: product_09_image_01,
         image02: product_09_image_02,
         categorySlug: 'ao-somi',
@@ -146,6 +155,7 @@ const products = [
     {
         title: 'Quần jean phong cách 10',
         price: 400,
+        oldPrice: 490,
         image01: product_10_image_01,
         image02: product_10_image_02,
         categorySlug: 'quan-jean',
@@ -158,6 +168,7 @@ const products = [
     {
         title: 'Quần jean 11',
         price: 300,
+        oldPrice: 510,
         image01: product_11_image_01,
         image02: product_11_image_02,
         categorySlug: 'quan-jean',
@@ -170,6 +181,7 @@ const products = [
     {
         title: 'Quần jean 12',
         price: 290,
+        oldPrice: 450,
         image01: product_12_image_01,
         image02: product_12_image_02,
         categorySlug: 'quan-jean',
@@ -182,6 +194,7 @@ const products = [
     {
         title: 'Áo thun Dinosaur 13',
         price: 260,
+        oldPrice: 320,
         image01: product_01_image_01,
         image02: product_01_image_02,
         categorySlug: 'ao-thun',
@@ -194,6 +207,7 @@ const products = [
     {
         title: 'Áo thun Dinosaur 14',
         price: 480,
+        oldPrice: 540,
         image01: product_02_image_01,
         image02: product_02_image_02,
         categorySlug: 'ao-thun',
@@ -206,6 +220,7 @@ const products = [
     {
         title: 'Áo thun Dinosaur 15',
         price: 420,
+        oldPrice: 670,
         image01: product_03_image_01,
         image02: product_03_image_02,
         categorySlug: 'ao-thun',
@@ -218,6 +233,7 @@ const products = [
     {
         title: 'Áo somi dài tay 16',
         price: 390,
+        oldPrice: 810,
         image01: product_08_image_01,
         image02: product_08_image_02,
         categorySlug: 'ao-somi',
@@ -230,6 +246,7 @@ const products = [
     {
         title: 'Áo somi tay dài 17',
         price: 370,
+        oldPrice: 410,
         image01: product_09_image_01,
         image02: product_09_image_02,
         categorySlug: 'ao-somi',
@@ -242,6 +259,7 @@ const products = [
     {
         title: 'Quần jean phong cách 18',
         price: 230,
+        oldPrice: 300,
         image01: product_10_image_01,
         image02: product_10_image_02,
         categorySlug: 'quan-jean',
@@ -266,11 +284,11 @@ const getProductBySlug = (slug) => products.find((e) => e.slug === slug);
 
 const getCartItemsInfo = (cartItems) => {
     let res = [];
-    if (cartItems.length > 0) {
-        cartItems.forEach((e) => {
-            let product = getProductBySlug(e.slug);
+    if (cartItems.length) {
+        cartItems.forEach((item) => {
+            let product = getProductBySlug(item.slug);
             res.push({
-                ...e,
+                ...item,
                 product: product,
             });
         });

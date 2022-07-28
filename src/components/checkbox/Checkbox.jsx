@@ -5,7 +5,6 @@ import './customcheck.scss';
 
 function Checkbox(props) {
     const inputRef = useRef(null);
-
     const onChange = () => {
         if (props.onChange) {
             props.onChange(inputRef.current);

@@ -83,6 +83,7 @@
             @include tablet {
                 display: block;
                 font-size: 2.5rem;
+                cursor: pointer;
             }
         }
 
@@ -96,6 +97,7 @@
         &__left {
             &-close {
                 display: none;
+                cursor: pointer;
             }
 
             @include tablet {

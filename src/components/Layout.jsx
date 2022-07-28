@@ -6,19 +6,19 @@ import Footer from './footer/Footer';
 import Navigate from '../routes/Navigate';
 
 import { BrowserRouter } from 'react-router-dom';
+import ProductModal from './product/ProductModal';
 
 function Layout() {
     return (
         <BrowserRouter>
-            <div>
-                <Header />
-                <div className="container">
-                    <div className="main">
-                        <Navigate />
-                    </div>
+            <Header />
+            <div className="container">
+                <div className="main">
+                    <Navigate />
                 </div>
             </div>
             <Footer />
+            <ProductModal />
         </BrowserRouter>
     );
 }

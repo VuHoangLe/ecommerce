@@ -5,7 +5,7 @@ import Helmet from '../components/Helmet';
 import Slider from '../components/slider/Slider';
 import { Section, SectionBody, SectionTitle } from '../components/section/Wrap';
 import Policy from '../components/policy/Policy';
-import Product from '../components/product/Product';
+import ProductCard from '../components/product/ProductCard';
 import Grid from '../components/grid/Grid';
 
 import SliderData from '../assets/fake-data/slider';
@@ -38,13 +38,14 @@ function Home() {
                 <SectionBody>
                     <Grid col={4} mdCol={2} smCol={1} gap={20}>
                         {productData.getProducts(4).map((item, index) => (
-                            <Product
+                            <ProductCard
                                 key={index}
                                 img01={item.image01}
                                 img02={item.image02}
                                 name={item.title}
                                 slug={item.slug}
                                 price={item.price}
+                                oldPrice={item.oldPrice}
                             />
                         ))}
                     </Grid>
@@ -57,13 +58,14 @@ function Home() {
                 <SectionBody>
                     <Grid col={4} mdCol={2} smCol={1} gap={20}>
                         {productData.getProducts(8).map((item, index) => (
-                            <Product
+                            <ProductCard
                                 key={index}
                                 img01={item.image01}
                                 img02={item.image02}
                                 name={item.title}
                                 slug={item.slug}
                                 price={item.price}
+                                oldPrice={item.oldPrice}
                             />
                         ))}
                     </Grid>
@@ -85,13 +87,14 @@ function Home() {
                 <SectionBody>
                     <Grid col={4} mdCol={2} smCol={1} gap={20}>
                         {productData.getProducts(12).map((item, index) => (
-                            <Product
+                            <ProductCard
                                 key={index}
                                 img01={item.image01}
                                 img02={item.image02}
                                 name={item.title}
                                 slug={item.slug}
                                 price={item.price}
+                                oldPrice={item.oldPrice}
                             />
                         ))}
                     </Grid>
