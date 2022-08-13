@@ -6,6 +6,8 @@ import { useDispatch } from 'react-redux';
 import { addItem } from '../../redux/shopping-cart/cartItemSlice';
 import Button from '../../components/button/Button';
 import './product.scss';
+// import { pushData } from '../../assets/fake-data/catagoryData';
+// import { pushData } from '../../assets/fake-data/productsData';
 
 const ProductView = ({ product }) => {
     const dispatch = useDispatch();
@@ -82,6 +84,8 @@ const ProductView = ({ product }) => {
                     price: product.price,
                 })
             );
+            // pushData();
+
             alert('SuccessFul');
         }
     };

@@ -16,7 +16,7 @@ const policy = [
     },
     {
         name: 'Warranty support',
-        description: 'Exchange, repair at all stores',
+        description: 'Exchange, repair',
         icon: 'bx bx-donate-heart',
     },
 ];

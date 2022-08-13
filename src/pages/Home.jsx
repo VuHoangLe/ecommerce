@@ -12,12 +12,20 @@ import SliderData from '../assets/fake-data/slider';
 import PolicyData from '../assets/fake-data/policy';
 import productData from '../assets/fake-data/products';
 import banner from '../assets/images/banner.png';
+import { useState } from 'react';
+import { getDocuments } from '../firebase/services';
+import Header from '../components/header/Header';
 
 function Home() {
+    const [bestSellerProducts, setbestSellerProducts] = useState([]);
+
+    getDocuments('products', 4).then((data) => {
+        setbestSellerProducts(data);
+    });
     return (
         <Helmet title="Home">
             {/* Slider */}
-            <Slider data={SliderData} control auto></Slider>
+            <Slider data={SliderData} control></Slider>
 
             {/*Section Policy */}
             <Section>
@@ -37,7 +45,7 @@ function Home() {
                 <SectionTitle>Best seller of the week</SectionTitle>
                 <SectionBody>
                     <Grid col={4} mdCol={2} smCol={1} gap={20}>
-                        {productData.getProducts(4).map((item, index) => (
+                        {bestSellerProducts.map((item, index) => (
                             <ProductCard
                                 key={index}
                                 img01={item.image01}

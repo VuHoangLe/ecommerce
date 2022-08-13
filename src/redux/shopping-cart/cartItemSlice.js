@@ -48,6 +48,7 @@ export const cartItemsSlice = createSlice({
                     },
                 ];
             }
+
             localStorage.setItem('cartItems', JSON.stringify(sortItem(state.value)));
         },
         updateItem: (state, action) => {

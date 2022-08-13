@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Helmet from '../components/Helmet';
@@ -7,22 +7,34 @@ import Grid from '../components/grid/Grid';
 import ProductCard from '../components/product/ProductCard';
 import ProductView from '../components/product/ProductView';
 
-import productData from '../assets/fake-data/products';
+import { getDocuments } from '../firebase/services';
+import useFireStore from '../hooks/useFirestore';
+import { useMemo } from 'react';
 
 const Product = (props) => {
     let params = useParams();
-    const product = productData.getProductBySlug(params.slug);
-    const relatedProduct = productData.getProducts(8);
+    const [moreProducts, setMoreProducts] = useState([]);
+    getDocuments('products', 8).then((data) => {
+        setMoreProducts(data);
+    });
+    const condition = useMemo(() => {
+        return {
+            fieldName: 'slug',
+            operator: '==',
+            compareValue: params.slug,
+        };
+    }, [params.slug]);
+    const productBySlug = useFireStore('products', condition);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, [product]);
+    }, [productBySlug]);
 
     return (
-        <Helmet title={product.title}>
+        <Helmet title={productBySlug.map((item) => item.name)}>
             <Section>
                 <SectionBody>
-                    <ProductView product={product} />
+                    <ProductView product={productBySlug[0]} />
                 </SectionBody>
             </Section>
 
@@ -30,13 +42,13 @@ const Product = (props) => {
                 <SectionTitle>Discover more</SectionTitle>
                 <SectionBody>
                     <Grid col={4} mdCol={2} smCol={1} gap={20}>
-                        {relatedProduct.map((item, index) => (
+                        {moreProducts.map((item, index) => (
                             <ProductCard
                                 item={item}
                                 key={index}
                                 img01={item.image01}
                                 img02={item.image02}
-                                name={item.title}
+                                name={item.name}
                                 slug={item.slug}
                                 price={item.price}
                                 oldPrice={item.oldPrice}

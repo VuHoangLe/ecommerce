@@ -45,6 +45,12 @@
         img {
             height: 28px;
         }
+
+        @include mobile {
+            img {
+                height: 14px;
+            }
+        }
     }
 
     &__menu {
@@ -55,7 +61,7 @@
         font-size: 1.6rem;
 
         &__item ~ &__item {
-            margin-left: 40px;
+            margin-left: 28px;
 
             @include tablet {
                 margin-left: 20px;
@@ -90,7 +96,6 @@
         &__left,
         &__right {
             @include flex(center, center);
-
             height: 100%;
         }
 

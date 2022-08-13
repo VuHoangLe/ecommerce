@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 
 function Helmet(props) {
@@ -10,9 +9,5 @@ function Helmet(props) {
 
     return <>{props.children}</>;
 }
-
-Helmet.propTypes = {
-    title: PropTypes.string.isRequired,
-};
 
 export default Helmet;

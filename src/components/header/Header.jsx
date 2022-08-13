@@ -1,10 +1,12 @@
 import React from 'react';
-import { useEffect } from 'react';
-import { useRef } from 'react';
+import { useState } from 'react';
+import { useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
 
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import logo from '../../assets/images/Logo-2.png';
+import { auth } from '../../firebase/config';
 
 import './header.scss';
 
@@ -29,6 +31,10 @@ const mainNav = [
 
 function Header() {
     const { pathname } = useLocation();
+    const navigate = useNavigate();
+
+    const userInformation = useSelector((state) => state.userInfo.value[0]);
+    const [userAvatar, setUserAvatar] = useState();
     const activeNav = mainNav.findIndex((e) => e.path === pathname);
 
     const headerRef = useRef(null);
@@ -47,6 +53,16 @@ function Header() {
         };
         window.addEventListener('scroll', handleScroll);
     }, []);
+
+    useEffect(() => {
+        return () => {
+            URL.revokeObjectURL(userAvatar);
+        };
+    }, [userAvatar]);
+
+    const updateAvatar = (e) => {
+        setUserAvatar(URL.createObjectURL(e.target.files[0]));
+    };
 
     return (
         <header className="header" ref={headerRef}>
@@ -86,16 +102,39 @@ function Header() {
                     {/* Menu right */}
                     <div className="header__menu__right">
                         <div className="header__menu__item header__menu__right__item">
-                            <i className="bx bx-search"></i>
-                        </div>
-                        <div className="header__menu__item header__menu__right__item">
                             <Link to="/cart">
                                 <i className="bx bx-cart"></i>
                             </Link>
                         </div>
-                        <div className="header__menu__item header__menu__right__item">
-                            <i className="bx bxs-user"></i>
-                        </div>
+
+                        {!userInformation ? (
+                            <div className="header__menu__item header__menu__right__item">
+                                <Link to="/login">
+                                    <i className="bx bxs-user"></i>
+                                </Link>
+                            </div>
+                        ) : (
+                            <div className="header__menu__item header__menu__right__item">
+                                <label htmlFor="updateAvatar">
+                                    <img className="user__avatar" src={userInformation.photoURL} alt="" />
+                                </label>
+                                <input
+                                    type="file"
+                                    name="updateAvatar"
+                                    id="updateAvatar"
+                                    onChange={updateAvatar}
+                                    style={{ display: 'none' }}
+                                />
+                                <div
+                                    className="user__name"
+                                    onClick={() => {
+                                        navigate('/login');
+                                        auth.signOut();
+                                    }}>
+                                    {userInformation.displayName}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
