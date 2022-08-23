@@ -1,4 +1,5 @@
-import React from 'react';
+import { useState, useEffect, useContext } from 'react';
+
 import { Link } from 'react-router-dom';
 
 import Helmet from '../components/Helmet';
@@ -10,18 +11,28 @@ import Grid from '../components/grid/Grid';
 
 import SliderData from '../assets/fake-data/slider';
 import PolicyData from '../assets/fake-data/policy';
-import productData from '../assets/fake-data/products';
 import banner from '../assets/images/banner.png';
-import { useState } from 'react';
-import { getDocuments } from '../firebase/services';
-import Header from '../components/header/Header';
+
+import { AppContext } from '../components/context/AppProvider';
 
 function Home() {
     const [bestSellerProducts, setbestSellerProducts] = useState([]);
+    const [newProducts, setNewProducts] = useState([]);
+    const [recommendedProducts, setRecommendedProducts] = useState([]);
 
-    getDocuments('products', 4).then((data) => {
-        setbestSellerProducts(data);
-    });
+    const { randomProducts } = useContext(AppContext);
+
+    useEffect(() => {
+        setbestSellerProducts(randomProducts(4));
+    }, [randomProducts]);
+
+    useEffect(() => {
+        setNewProducts(randomProducts(8));
+    }, [randomProducts]);
+    useEffect(() => {
+        setRecommendedProducts(randomProducts(12));
+    }, [randomProducts]);
+
     return (
         <Helmet title="Home">
             {/* Slider */}
@@ -45,12 +56,12 @@ function Home() {
                 <SectionTitle>Best seller of the week</SectionTitle>
                 <SectionBody>
                     <Grid col={4} mdCol={2} smCol={1} gap={20}>
-                        {bestSellerProducts.map((item, index) => (
+                        {bestSellerProducts.map((item) => (
                             <ProductCard
-                                key={index}
+                                key={item.id}
                                 img01={item.image01}
                                 img02={item.image02}
-                                name={item.title}
+                                name={item.name}
                                 slug={item.slug}
                                 price={item.price}
                                 oldPrice={item.oldPrice}
@@ -65,12 +76,12 @@ function Home() {
                 <SectionTitle>New releases</SectionTitle>
                 <SectionBody>
                     <Grid col={4} mdCol={2} smCol={1} gap={20}>
-                        {productData.getProducts(8).map((item, index) => (
+                        {newProducts.map((item) => (
                             <ProductCard
-                                key={index}
+                                key={item.id}
                                 img01={item.image01}
                                 img02={item.image02}
-                                name={item.title}
+                                name={item.name}
                                 slug={item.slug}
                                 price={item.price}
                                 oldPrice={item.oldPrice}
@@ -94,12 +105,12 @@ function Home() {
                 <SectionTitle>Popular/Recommended Products</SectionTitle>
                 <SectionBody>
                     <Grid col={4} mdCol={2} smCol={1} gap={20}>
-                        {productData.getProducts(12).map((item, index) => (
+                        {recommendedProducts.map((item) => (
                             <ProductCard
-                                key={index}
+                                key={item.id}
                                 img01={item.image01}
                                 img02={item.image02}
-                                name={item.title}
+                                name={item.name}
                                 slug={item.slug}
                                 price={item.price}
                                 oldPrice={item.oldPrice}

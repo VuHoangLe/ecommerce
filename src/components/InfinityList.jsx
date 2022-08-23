@@ -1,8 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Grid from './grid/Grid';
 import ProductCard from './product/ProductCard';
-import { useState } from 'react';
 
 const InfinityList = (props) => {
     const listRef = useRef(null);
@@ -56,7 +55,7 @@ const InfinityList = (props) => {
                         key={index}
                         img01={item.image01}
                         img02={item.image02}
-                        name={item.title}
+                        name={item.name}
                         price={Number(item.price)}
                         slug={item.slug}
                         oldPrice={item.oldPrice}
@@ -69,6 +68,7 @@ const InfinityList = (props) => {
 
 InfinityList.propTypes = {
     data: PropTypes.array.isRequired,
+    perLoad: PropTypes.number,
 };
 
 export default InfinityList;

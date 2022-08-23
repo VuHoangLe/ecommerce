@@ -1,0 +1,28 @@
+@use '../../../scss/' as *;
+.table-wrapper {
+    overflow-y: auto;
+}
+
+table {
+    width: 100%;
+    border-spacing: 0;
+}
+
+thead {
+    background-color: $admin-second-bg;
+}
+
+tr {
+    text-align: left;
+}
+
+th,
+td {
+    text-transform: capitalize;
+    padding: 15px 10px;
+}
+
+tbody > tr:hover {
+    background-color: $main-color;
+    color: $txt-white;
+}

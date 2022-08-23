@@ -2,12 +2,12 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import productModalSlice from './product-modal/productModalSlice';
 import cartItemSlice from './shopping-cart/cartItemSlice';
-import userInfoSlice from './user-info/userInfoSlice';
+import totalProductSlice from './total-product/totalProductSlice';
 
 export const store = configureStore({
     reducer: {
         productModal: productModalSlice,
         cartItems: cartItemSlice,
-        userInfo: userInfoSlice,
+        totalProduct: totalProductSlice,
     },
 });

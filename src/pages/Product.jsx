@@ -7,16 +7,19 @@ import Grid from '../components/grid/Grid';
 import ProductCard from '../components/product/ProductCard';
 import ProductView from '../components/product/ProductView';
 
-import { getDocuments } from '../firebase/services';
 import useFireStore from '../hooks/useFirestore';
 import { useMemo } from 'react';
+import { useContext } from 'react';
+import { AppContext } from '../components/context/AppProvider';
 
-const Product = (props) => {
+const Product = () => {
     let params = useParams();
+    const { randomProducts } = useContext(AppContext);
     const [moreProducts, setMoreProducts] = useState([]);
-    getDocuments('products', 8).then((data) => {
-        setMoreProducts(data);
-    });
+    useEffect(() => {
+        setMoreProducts(randomProducts(8));
+    }, [randomProducts]);
+
     const condition = useMemo(() => {
         return {
             fieldName: 'slug',

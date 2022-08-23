@@ -13,7 +13,7 @@ function useFireStore(collections, condition) {
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             setDocuments(
                 querySnapshot.docs.map((doc) => {
-                    return { ...doc.data(), id: doc.id };
+                    return { ...doc.data(), docId: doc.id };
                 })
             );
         });

@@ -58,7 +58,6 @@ function Register() {
             const user = userCredential.user;
             updateProfile(auth.currentUser, {
                 displayName: displayName,
-                photoURL: 'https://cdn-icons-png.flaticon.com/512/1053/1053244.png?w=360',
             }).then(() => {
                 addDocument('users', {
                     displayName: user.displayName,

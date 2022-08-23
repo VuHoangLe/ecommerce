@@ -127,3 +127,32 @@ i {
     background-color: #c1c1c1;
     border-radius: 10px;
 }
+
+// admin
+.pageheader {
+    font-weight: 600;
+    font-size: 2.75rem;
+    margin-bottom: 42px;
+    text-transform: capitalize;
+}
+
+.card {
+    padding: 30px;
+    margin-bottom: 30px;
+    background-color: $main-bg;
+    box-shadow: $box-shadow;
+    border-radius: $border-radius;
+}
+
+.card__header {
+    text-transform: capitalize;
+}
+
+.card > div ~ div {
+    margin-top: 30px;
+}
+
+.card__footer {
+    text-align: center;
+    text-transform: capitalize;
+}

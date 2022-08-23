@@ -1,26 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useState, useEffect, useMemo } from 'react';
 
 import ProductView from './ProductView';
-import productData from '../../assets/fake-data/products';
 import Button from '../button/Button';
+import './product.scss';
+
+import { useSelector, useDispatch } from 'react-redux';
 import { remove } from '../../redux/product-modal/productModalSlice';
 
-import './product.scss';
+import useFireStore from '../../hooks/useFirestore';
 
 const ProductModal = () => {
     const dispatch = useDispatch();
     const productSlug = useSelector((state) => state.productModal.value);
-    const [product, setProduct] = useState(undefined);
+    const [productDetails, setProductDetails] = useState(undefined);
 
-    useEffect(() => {
-        setProduct(productData.getProductBySlug(productSlug));
+    const productCondition = useMemo(() => {
+        return {
+            fieldName: 'slug',
+            operator: '==',
+            compareValue: productSlug,
+        };
     }, [productSlug]);
 
+    const getProductBySlug = useFireStore('products', productCondition)[0];
+
+    useEffect(() => {
+        setProductDetails(getProductBySlug);
+    }, [getProductBySlug]);
+
     return (
-        <div className={`product-view__modal ${product === undefined ? '' : 'active'}`}>
+        <div className={`product-view__modal ${productDetails === undefined ? '' : 'active'}`}>
             <div className="product-view__modal__content">
-                <ProductView product={product} />
+                <ProductView product={productDetails} />
                 <div className="product-view__modal__content__close">
                     <Button
                         size="sm"

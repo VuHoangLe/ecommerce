@@ -1,12 +1,11 @@
-import React from 'react';
-import { useState } from 'react';
-import { useEffect, useRef } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import logo from '../../assets/images/Logo-2.png';
 import { auth } from '../../firebase/config';
+import { AuthContext } from '../context/AuthenProvider';
 
 import './header.scss';
 
@@ -32,9 +31,12 @@ const mainNav = [
 function Header() {
     const { pathname } = useLocation();
     const navigate = useNavigate();
+    const { hasUser } = useContext(AuthContext);
 
-    const userInformation = useSelector((state) => state.userInfo.value[0]);
     const [userAvatar, setUserAvatar] = useState();
+
+    const productQuantity = useSelector((state) => state.totalProduct.value);
+
     const activeNav = mainNav.findIndex((e) => e.path === pathname);
 
     const headerRef = useRef(null);
@@ -42,16 +44,18 @@ function Header() {
 
     const menuToggle = () => menuLeft.current.classList.toggle('active');
 
-    // Handle Scroll
     useEffect(() => {
         const handleScroll = () => {
             if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
-                headerRef.current.classList.add('shrink');
+                headerRef.current?.classList.add('shrink');
             } else {
-                headerRef.current.classList.remove('shrink');
+                headerRef.current?.classList.remove('shrink');
             }
         };
         window.addEventListener('scroll', handleScroll);
+        return () => {
+            handleScroll();
+        };
     }, []);
 
     useEffect(() => {
@@ -102,12 +106,15 @@ function Header() {
                     {/* Menu right */}
                     <div className="header__menu__right">
                         <div className="header__menu__item header__menu__right__item">
-                            <Link to="/cart">
-                                <i className="bx bx-cart"></i>
-                            </Link>
+                            <div className="header__menu_item__cart">
+                                <Link to="/cart">
+                                    <i className="bx bx-cart"></i>
+                                </Link>
+                                <div className="cart__quantity">{productQuantity}</div>
+                            </div>
                         </div>
 
-                        {!userInformation ? (
+                        {!hasUser ? (
                             <div className="header__menu__item header__menu__right__item">
                                 <Link to="/login">
                                     <i className="bx bxs-user"></i>
@@ -116,7 +123,15 @@ function Header() {
                         ) : (
                             <div className="header__menu__item header__menu__right__item">
                                 <label htmlFor="updateAvatar">
-                                    <img className="user__avatar" src={userInformation.photoURL} alt="" />
+                                    <img
+                                        className="user__avatar"
+                                        src={
+                                            hasUser.photoURL
+                                                ? hasUser.photoURL
+                                                : 'https://cdn-icons-png.flaticon.com/512/149/149071.png'
+                                        }
+                                        alt=""
+                                    />
                                 </label>
                                 <input
                                     type="file"
@@ -131,7 +146,7 @@ function Header() {
                                         navigate('/login');
                                         auth.signOut();
                                     }}>
-                                    {userInformation.displayName}
+                                    {hasUser.displayName}
                                 </div>
                             </div>
                         )}

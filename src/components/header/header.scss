@@ -158,3 +158,21 @@
         }
     }
 }
+.header__menu_item__cart {
+    position: relative;
+}
+.cart__quantity {
+    @include flex(center, center);
+    position: absolute;
+    bottom: 70%;
+    right: 0;
+
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+
+    font-size: 1.25rem;
+
+    color: #fff;
+    background-color: red;
+}

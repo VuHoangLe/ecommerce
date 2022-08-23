@@ -30,12 +30,6 @@ export const cartItemsSlice = createSlice({
                 state.value = [
                     ...state.value,
                     {
-                        name: newItem.name,
-                        id: duplicate[0].id,
-                        slug: newItem.slug,
-                        color: newItem.color,
-                        size: newItem.size,
-                        price: newItem.price,
                         quantity: newItem.quantity + duplicate[0].quantity,
                     },
                 ];
@@ -44,7 +38,6 @@ export const cartItemsSlice = createSlice({
                     ...state.value,
                     {
                         ...action.payload,
-                        id: state.value.length > 0 ? state.value[state.value.length - 1].id + 1 : 1,
                     },
                 ];
             }

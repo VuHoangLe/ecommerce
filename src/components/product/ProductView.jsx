@@ -1,22 +1,50 @@
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import { addItem } from '../../redux/shopping-cart/cartItemSlice';
 import Button from '../../components/button/Button';
 import './product.scss';
+import useFireStore from '../../hooks/useFirestore';
+import { useMemo } from 'react';
+import { updateField } from '../../firebase/services';
+import { arrayUnion } from 'firebase/firestore';
+import { remove } from '../../redux/product-modal/productModalSlice';
+import { AuthContext } from '../context/AuthenProvider';
+import { setTotal } from '../../redux/total-product/totalProductSlice';
 // import { pushData } from '../../assets/fake-data/catagoryData';
 // import { pushData } from '../../assets/fake-data/productsData';
 
 const ProductView = ({ product }) => {
+    const [userInfomation, setUserInfomation] = useState({});
+    const { hasUser } = useContext(AuthContext);
+
+    const userInfoId = hasUser ? hasUser.uid : null;
+
+    // useEffect(() => {
+    //     pushData();
+    // }, []);
+
+    const userCondition = useMemo(() => {
+        return {
+            fieldName: 'uid',
+            operator: '==',
+            compareValue: userInfoId,
+        };
+    }, [userInfoId]);
+    const userDetails = useFireStore('users', userCondition);
+    useEffect(() => {
+        setUserInfomation(userDetails[0]);
+    }, [userDetails]);
+
     const dispatch = useDispatch();
 
     const Navigate = useNavigate();
 
     if (product === undefined) {
         product = {
-            title: '',
+            name: '',
             price: '',
             image01: null,
             image02: null,
@@ -74,17 +102,30 @@ const ProductView = ({ product }) => {
 
     const addToCart = () => {
         if (check()) {
-            dispatch(
-                addItem({
-                    name: product.title,
-                    color: color,
-                    size: size,
-                    quantity: quantity,
-                    slug: product.slug,
-                    price: product.price,
-                })
-            );
-            // pushData();
+            if (!hasUser) {
+                dispatch(
+                    addItem({
+                        color: color,
+                        size: size,
+                        quantity: quantity,
+                        price: product.price,
+                        docId: product.docId,
+                    })
+                );
+            }
+            dispatch(setTotal(quantity));
+
+            if (userInfomation) {
+                updateField('users', userInfomation.docId, {
+                    products: arrayUnion({
+                        color: color,
+                        size: size,
+                        quantity: quantity,
+                        price: product.price,
+                        docId: product.docId,
+                    }),
+                });
+            }
 
             alert('SuccessFul');
         }
@@ -92,16 +133,31 @@ const ProductView = ({ product }) => {
 
     const goToCart = () => {
         if (check()) {
-            dispatch(
-                addItem({
-                    name: product.title,
-                    color: color,
-                    size: size,
-                    quantity: quantity,
-                    slug: product.slug,
-                    price: product.price,
-                })
-            );
+            if (!hasUser) {
+                dispatch(
+                    addItem({
+                        color: color,
+                        size: size,
+                        quantity: quantity,
+                        price: product.price,
+                        docId: product?.docId,
+                    })
+                );
+            }
+            dispatch(setTotal(quantity));
+            if (userInfomation) {
+                updateField('users', userInfomation.docId, {
+                    products: arrayUnion({
+                        color: color,
+                        size: size,
+                        quantity: quantity,
+                        price: product.price,
+                        docId: product.docId,
+                    }),
+                });
+            }
+
+            dispatch(remove());
             Navigate('/cart');
         }
     };
@@ -136,7 +192,7 @@ const ProductView = ({ product }) => {
                 </div>
             </div>
             <div className="product__info">
-                <h1 className="product__info__title">{product.title}</h1>
+                <h1 className="product__info__title">{product.name}</h1>
                 <div className="product__info__description">
                     <div className="product__info__description__price">{product.price}</div>
                 </div>

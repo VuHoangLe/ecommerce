@@ -3,21 +3,21 @@ import PropTypes from 'prop-types';
 
 import './customcheck.scss';
 
-function Checkbox(props) {
+function Checkbox({ checked, onChange, label }) {
     const inputRef = useRef(null);
-    const onChange = () => {
-        if (props.onChange) {
-            props.onChange(inputRef.current);
+    const onInputChange = () => {
+        if (onChange) {
+            onChange(inputRef.current);
         }
     };
 
     return (
         <label className="customCheck">
-            <input type="checkbox" ref={inputRef} onChange={onChange} checked={props.checked} />
+            <input type="checkbox" ref={inputRef} onChange={onInputChange} checked={checked} />
             <span className="customCheck__checkmark">
                 <i className="bx bx-check"></i>
             </span>
-            {props.label}
+            {label}
         </label>
     );
 }

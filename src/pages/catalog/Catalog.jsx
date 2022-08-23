@@ -1,139 +1,202 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback, useContext } from 'react';
+
+import Helmet from '../../components/Helmet';
+import InfinityList from '../../components/InfinityList';
+import Button from '../../components/button/Button';
+import Checkbox from '../../components/checkbox/Checkbox';
+
+import productColor from '../../assets/fake-data/product-color';
+import productSize from '../../assets/fake-data/product-size';
 
 import './catalog.scss';
 
-import Helmet from '../../components/Helmet';
-import CatalogFilterWidget, { CatalogFilterButton } from './CatalogFilterWidget';
-import InfinityList from '../../components/InfinityList';
-
-import producData from '../../assets/fake-data/products';
-import categoryData from '../../assets/fake-data/category';
-import productColor from '../../assets/fake-data/product-color';
-import productSize from '../../assets/fake-data/product-size';
-import { useRef } from 'react';
-import Button from '../../components/button/Button';
+import Grid from '../../components/grid/Grid';
+import ProductCard from '../../components/product/ProductCard';
+import { AppContext } from '../../components/context/AppProvider';
+import { CircularProgress } from '@mui/material';
 
 function Catalog() {
-    const initFilter = {
+    const { listProducts, categoryItems } = useContext(AppContext);
+    const [allProducts, setAllProducts] = useState(listProducts);
+
+    const [categoryData, setCategoryData] = useState(categoryItems);
+
+    const [filterCatalog, setFilterCatalog] = useState({
         category: [],
         color: [],
         size: [],
-    };
-
-    const productList = producData.getAllProducts();
-
-    const [filter, setFilter] = useState(initFilter);
-    const [products, setProducts] = useState(productList);
-
-    const filterCheck = (type, checked, item) => {
-        if (checked) {
-            switch (type) {
-                case 'CATEGORY':
-                    setFilter({ ...filter, category: [...filter.category, item.categorySlug] });
-                    break;
-                case 'COLOR':
-                    setFilter({ ...filter, color: [...filter.color, item.color] });
-                    break;
-                case 'SIZE':
-                    setFilter({ ...filter, size: [...filter.size, item.size] });
-                    break;
-                default:
-                    setFilter(...filter);
-            }
-        } else {
-            switch (type) {
-                case 'CATEGORY':
-                    const newCategory = filter.category.filter((e) => e !== item.categorySlug);
-                    setFilter({ ...filter, category: newCategory });
-                    break;
-                case 'COLOR':
-                    const newColor = filter.color.filter((e) => e !== item.color);
-                    setFilter({ ...filter, color: newColor });
-                    break;
-                case 'SIZE':
-                    const newSize = filter.size.filter((e) => e !== item.size);
-                    setFilter({ ...filter, size: newSize });
-                    break;
-                default:
-                    setFilter(...filter);
-            }
-        }
-    };
-
-    const renderProduct = useCallback(() => {
-        let temp = productList;
-        if (filter.category.length) {
-            temp = temp.filter((e) => filter.category.includes(e.categorySlug));
-        }
-        if (filter.color.length) {
-            temp = temp.filter((e) => {
-                const check = e.colors.find((color) => {
-                    return filter.color.includes(color);
-                });
-                return check;
-            });
-        }
-
-        if (filter.size.length) {
-            temp = temp.filter((e) => {
-                const check = e.size.find((size) => filter.size.includes(size));
-                return check;
-            });
-        }
-        setProducts(temp);
-    }, [filter, setProducts, productList]);
-
-    useEffect(() => {
-        renderProduct();
-    }, [renderProduct]);
-
-    const clearFilter = () => {
-        setFilter(initFilter);
-    };
+    });
 
     const filterRef = useRef(null);
+
     const controlFilter = () => {
         filterRef.current.classList.toggle('active');
     };
 
-    return (
-        <Helmet title="Catalog">
-            <div className="catalog">
-                <div className="catalog__filter" ref={filterRef}>
-                    <div className="catalog__filter__close" onClick={controlFilter}>
-                        <i className="bx bx-left-arrow-alt"></i>
-                    </div>
-                    <CatalogFilterWidget
-                        title="CATEGORY"
-                        data={categoryData}
-                        filterCheck={filterCheck}
-                        filter={filter.category}
-                    />
-                    <CatalogFilterWidget
-                        title="COLOR"
-                        data={productColor}
-                        filterCheck={filterCheck}
-                        filter={filter.color}
-                    />
-                    <CatalogFilterWidget
-                        title="SIZE"
-                        data={productSize}
-                        filterCheck={filterCheck}
-                        filter={filter.size}
-                    />
+    const clearFilter = () => {
+        setFilterCatalog({ category: [], color: [], size: [] });
+    };
 
-                    <CatalogFilterButton size="sm" clearFilter={clearFilter} />
-                </div>
-                <div className="catalog__filter__toggle">
-                    <Button size="sm" onClick={controlFilter}>
-                        Filter
-                    </Button>
-                </div>
-                <div className="catalog__content">
-                    <InfinityList data={products} perload={6} />
-                </div>
-            </div>
-        </Helmet>
+    useEffect(() => {
+        setAllProducts(listProducts);
+        setCategoryData(categoryItems);
+    }, [listProducts, categoryItems]);
+
+    const filterSelected = (type, checked, item) => {
+        if (checked) {
+            switch (type) {
+                case 'CATEGORY':
+                    setFilterCatalog({ ...filterCatalog, category: [...filterCatalog.category, item.id] });
+                    break;
+                case 'COLOR':
+                    setFilterCatalog({ ...filterCatalog, color: [...filterCatalog.color, item.color] });
+                    break;
+                case 'SIZE':
+                    setFilterCatalog({ ...filterCatalog, size: [...filterCatalog.size, item.size] });
+                    break;
+                default:
+                    setFilterCatalog({ ...filterCatalog });
+            }
+        } else {
+            switch (type) {
+                case 'CATEGORY':
+                    const newFilterCata = filterCatalog.category.filter((elmt) => elmt !== item.id);
+                    setFilterCatalog({ ...filterCatalog, category: newFilterCata });
+                    break;
+                case 'COLOR':
+                    const newFilterColor = filterCatalog.color.filter((elmt) => elmt !== item.color);
+                    setFilterCatalog({ ...filterCatalog, color: newFilterColor });
+                    break;
+                case 'SIZE':
+                    const newFilterSize = filterCatalog.size.filter((elmt) => elmt !== item.size);
+                    setFilterCatalog({ ...filterCatalog, size: newFilterSize });
+                    break;
+                default:
+                    setFilterCatalog({ ...filterCatalog });
+            }
+        }
+    };
+
+    const rerenderProducts = useCallback(() => {
+        let temp = listProducts;
+        if (filterCatalog.category.length) {
+            temp = temp.filter((elmt) => filterCatalog.category.includes(elmt.categoryId));
+        }
+        if (filterCatalog.color.length) {
+            temp = temp.filter((elmt) => {
+                const check = elmt.colors.find((color) => filterCatalog.color.includes(color));
+                return check;
+            });
+        }
+        if (filterCatalog.size.length) {
+            temp = temp.filter((elmt) => {
+                const check = elmt.size.find((size) => filterCatalog.size.includes(size));
+                return check;
+            });
+        }
+        setAllProducts(temp);
+    }, [filterCatalog, listProducts]);
+
+    useEffect(() => {
+        rerenderProducts();
+    }, [rerenderProducts]);
+
+    return (
+        <>
+            {listProducts.length ? (
+                <Helmet title="Catalog">
+                    <div className="catalog">
+                        <div className="catalog__filter" ref={filterRef}>
+                            <div className="catalog__filter__close" onClick={controlFilter}>
+                                <i className="bx bx-left-arrow-alt"></i>
+                            </div>
+
+                            {/* Filter by Category */}
+                            <div className="catalog__filter__widget">
+                                <h1 className="catalog__filter__widget__title">Category</h1>
+
+                                <div className="catalog__filter__widget__content">
+                                    {categoryData.map((item, index) => (
+                                        <div key={index} className="catalog__filter__widget__content__item">
+                                            <Checkbox
+                                                label={item.name}
+                                                onChange={(input) => filterSelected('CATEGORY', input.checked, item)}
+                                                checked={filterCatalog.category.includes(item.id)}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Filter by Color */}
+                            <div className="catalog__filter__widget">
+                                <h1 className="catalog__filter__widget__title">Color</h1>
+
+                                <div className="catalog__filter__widget__content">
+                                    {productColor.map((item, index) => (
+                                        <div key={index} className="catalog__filter__widget__content__item">
+                                            <Checkbox
+                                                label={item.name}
+                                                onChange={(input) => filterSelected('COLOR', input.checked, item)}
+                                                checked={filterCatalog.color.includes(item.color)}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Filter by Size */}
+                            <div className="catalog__filter__widget">
+                                <h1 className="catalog__filter__widget__title">Size</h1>
+
+                                <div className="catalog__filter__widget__content">
+                                    {productSize.map((item, index) => (
+                                        <div key={index} className="catalog__filter__widget__content__item">
+                                            <Checkbox
+                                                label={item.name}
+                                                onChange={(input) => filterSelected('SIZE', input.checked, item)}
+                                                checked={filterCatalog.size.includes(item.size)}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="catalog__filter__widget">
+                                <div className="catalog__filter__widget__content">
+                                    <Button size="sm" onClick={clearFilter}>
+                                        Remove filter
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="catalog__filter__toggle">
+                            <Button size="sm" onClick={() => controlFilter()}>
+                                Filter
+                            </Button>
+                        </div>
+                        <div className="catalog__content">
+                            {/* <InfinityList data={allProducts} perload={6} /> */}
+                            <Grid col={3} mdCol={2} smCol={1} gap={20}>
+                                {allProducts.map((item, index) => (
+                                    <ProductCard
+                                        key={index}
+                                        img01={item.image01}
+                                        img02={item.image02}
+                                        name={item.name}
+                                        price={Number(item.price)}
+                                        slug={item.slug}
+                                        oldPrice={item.oldPrice}
+                                    />
+                                ))}
+                            </Grid>
+                        </div>
+                    </div>
+                </Helmet>
+            ) : (
+                <CircularProgress color="secondary" />
+            )}
+        </>
     );
 }
 

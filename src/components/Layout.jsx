@@ -1,15 +1,22 @@
-import Authen from './authen/Authen';
 import Navigate from '../routes/Navigate';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ProductModal from './product/ProductModal';
+import Manage from '../routes/Manage';
+import AppProvider from './context/AppProvider';
+import AuthenProvider from './context/AuthenProvider';
 
 function Layout() {
     return (
         <BrowserRouter>
-            <Authen>
-                <Navigate />
-                <ProductModal />
-            </Authen>
+            <AuthenProvider>
+                <AppProvider>
+                    <Routes>
+                        <Route path="/*" element={<Navigate />} />
+                        <Route path="/manage/*" element={<Manage />} />
+                    </Routes>
+                    <ProductModal />
+                </AppProvider>
+            </AuthenProvider>
         </BrowserRouter>
     );
 }
