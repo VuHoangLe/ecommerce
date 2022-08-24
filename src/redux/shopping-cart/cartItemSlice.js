@@ -6,16 +6,8 @@ const initialState = {
     value: items,
 };
 
-const findItem = (state, item) => {
-    return state.filter((e) => e.slug === item.slug && e.color === item.color && e.size === item.size);
-};
-
 const delItem = (state, item) => {
     return state.filter((e) => e.slug !== item.slug || e.color !== item.color || e.size !== item.size);
-};
-
-const sortItem = (arr) => {
-    return arr.sort((a, b) => (a.id > b.id ? 1 : a.id < b.id ? -1 : 0));
 };
 
 export const cartItemsSlice = createSlice({
@@ -24,15 +16,21 @@ export const cartItemsSlice = createSlice({
     reducers: {
         addItem: (state, action) => {
             const newItem = action.payload;
-            const duplicate = findItem(state.value, newItem);
-            if (duplicate.length) {
-                state.value = delItem(state.value, newItem);
-                state.value = [
-                    ...state.value,
-                    {
-                        quantity: newItem.quantity + duplicate[0].quantity,
-                    },
-                ];
+            let isDuplicated = false;
+            state.value.forEach((elmt) => {
+                if (newItem.docId === elmt.docId && newItem.color === elmt.color && newItem.size === elmt.size) {
+                    isDuplicated = true;
+                }
+            });
+
+            if (isDuplicated) {
+                let temp = state.value.map((elmt) => {
+                    if (elmt.docId === newItem.docId) {
+                        elmt.quantity += newItem.quantity;
+                    }
+                    return elmt;
+                });
+                state.value = temp;
             } else {
                 state.value = [
                     ...state.value,
@@ -42,29 +40,25 @@ export const cartItemsSlice = createSlice({
                 ];
             }
 
-            localStorage.setItem('cartItems', JSON.stringify(sortItem(state.value)));
+            localStorage.setItem('cartItems', JSON.stringify(state.value));
         },
         updateItem: (state, action) => {
             const itemUpdate = action.payload;
 
-            const item = findItem(state.value, itemUpdate);
-            if (item.length) {
-                state.value = delItem(state.value, itemUpdate);
+            let temp = state.value.map((elmt) => {
+                if (elmt.docId === itemUpdate.docId) {
+                    elmt.quantity = itemUpdate.quantity;
+                }
+                return elmt;
+            });
+            state.value = temp;
 
-                state.value = [
-                    ...state.value,
-                    {
-                        ...itemUpdate,
-                        id: item[0].id,
-                    },
-                ];
-                localStorage.setItem('cartItems', JSON.stringify(sortItem(state.value)));
-            }
+            localStorage.setItem('cartItems', JSON.stringify(state.value));
         },
         removeItem: (state, action) => {
             const itemRemove = action.payload;
             state.value = delItem(state.value, itemRemove);
-            localStorage.setItem('cartItems', JSON.stringify(sortItem(state.value)));
+            localStorage.setItem('cartItems', JSON.stringify(state.value));
         },
     },
 });

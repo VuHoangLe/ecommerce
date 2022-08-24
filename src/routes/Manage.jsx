@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import ManageLayOut from '../defaultlayout/manage/ManageLayOut';
+import ManageLayOut from '../layouts/manage/ManageLayOut';
 import Analytic from '../pages/ManagePage/Analytic';
 
 import Customers from '../pages/ManagePage/Customers';

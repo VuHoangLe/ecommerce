@@ -1,20 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const total = localStorage.getItem('totalProduct') !== null ? JSON.parse(localStorage.getItem('totalProduct')) : 0;
 const initialState = {
-    value: total,
+    value: 0,
 };
 
 export const totalProductSlice = createSlice({
     name: 'totalProduct',
     initialState,
     reducers: {
-        setTotal: (state, action) => {
-            state.value = action.payload;
-            localStorage.setItem('totalProduct', state.value);
+        setTotal: (state) => {
+            ++state.value;
         },
+
         removeTotal: (state) => {
-            state.value = null;
+            --state.value;
         },
     },
 });

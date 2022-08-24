@@ -1,0 +1,66 @@
+@use '../../../../assets/scss/' as *;
+
+.authen {
+    @include flex(flex-start, space-evenly);
+    @include mobile {
+        flex-direction: column-reverse;
+    }
+    padding-top: 24px;
+    gap: 30px;
+
+    &__image {
+        @include mobile {
+            display: none;
+        }
+    }
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        & > * {
+            width: 100%;
+            min-width: 280px;
+            max-width: 350px;
+        }
+
+        @include mobile {
+            width: 100%;
+            @include flex(center, center);
+        }
+
+        &__title {
+            text-align: center;
+        }
+    }
+    &__error {
+        color: $error-message;
+        font-size: 1.1rem;
+        font-weight: 400;
+    }
+}
+
+.form__wrapper {
+    display: flex;
+    margin: 20px;
+    label {
+        min-width: 150px;
+    }
+}
+.input__wrapper {
+    @include flex(flex-start, flex-start);
+    flex-direction: column;
+    flex-grow: 1;
+    input {
+        padding: 4px 6px;
+        width: 70%;
+        color: green;
+        &:invalid + span {
+            display: block;
+        }
+    }
+    span {
+        display: none;
+        color: red;
+    }
+}

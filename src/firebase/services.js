@@ -14,10 +14,12 @@ import {
 import { db } from './config';
 
 const addDocument = async (name, data) => {
-    await addDoc(collection(db, name), {
+    const result = await addDoc(collection(db, name), {
         ...data,
         createAt: serverTimestamp(),
     });
+
+    return result;
 };
 
 const setDocument = async (name, id, data) => {

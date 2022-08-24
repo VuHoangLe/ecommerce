@@ -11,42 +11,48 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Box, Typography } from '@mui/material';
 import { updateField } from '../../firebase/services';
+import { red } from '@mui/material/colors';
+import { display } from '@mui/system';
 
 const INPUTS = [
     {
         name: 'name',
         type: 'text',
+        required: true,
     },
 
     {
         name: 'oldPrice',
         type: 'text',
+        pattern: '^[0-9]+$',
+        required: true,
     },
     {
         name: 'price',
         type: 'text',
+        pattern: '^[0-9]+$',
+        required: true,
     },
     {
         name: 'total',
         type: 'text',
+        pattern: '^[0-9]*$',
+        required: true,
     },
     {
         name: 'description',
         type: 'text',
+        required: true,
     },
 
-    // {
-    //     name: 'size',
-    //     type: 'text',
-    // },
-    // {
-    //     name: 'image01',
-    //     type: 'file'
-    // }
-    // ,{
-    //     name: 'image02',
-    //     type: 'file'
-    // }
+    {
+        name: 'size',
+        type: 'text',
+    },
+    {
+        name: 'colors',
+        type: 'text',
+    },
 ];
 function ProductItem() {
     const productId = useParams().id;
@@ -81,58 +87,61 @@ function ProductItem() {
             return { ...prev, [e.target.name]: e.target.value };
         });
     };
-
-    const schema = yup.object({
-        name: yup.string().required('Name is required'),
-        oldPrice: yup.number().typeError('Must be a number').required('Old price is required'),
-        price: yup.number().typeError('Must be a number').required('Price is required'),
-        description: yup.string().required('Description is required'),
-        total: yup.number().typeError('Must be a number').required('Total is required'),
-    });
-
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm({
-        resolver: yupResolver(schema),
-    });
-
-    const onSubmit = (data) => {
-        updateField('products', detailProduct.docId, data);
+    const onSubmit = (e) => {
+        e.preventDefault();
+        let isValid = true;
+        INPUTS.forEach((elmt) => {
+            if (!elmt.pattern || isValid === false) {
+                return;
+            } else {
+                let regex = new RegExp(elmt.pattern);
+                if (!regex.test(detailProduct[elmt.name])) {
+                    isValid = false;
+                }
+            }
+        });
+        if (isValid) {
+            console.log('ok');
+            let sizes = Array.isArray(detailProduct.size) ? detailProduct.size : detailProduct.size.split(',');
+            let colors = Array.isArray(detailProduct.colors) ? detailProduct.colors : detailProduct.colors.split(',');
+            updateField('products', detailProduct.docId, { ...detailProduct, size: sizes, colors: colors });
+        } else {
+            console.log('not ok');
+        }
     };
     return (
-        <Grid col={2}>
-            <form className="edit__form" action="" onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+        <Grid col={2} gap={20}>
+            <form className="edit__form" action="" autoComplete="off">
                 <Typography variant="h3" className="edit__form__title">
                     Edit product
                 </Typography>
                 {INPUTS.map((item, index) => {
                     return (
-                        <Box
-                            key={index}
-                            sx={{
-                                margin: '30px 0',
-                            }}>
-                            <TextField
-                                fullWidth
-                                {...register(`${item.name}`)}
-                                type={item.type}
-                                value={(detailProduct && detailProduct[item.name]) || ''}
-                                onChange={(e) => handleInputChange(e)}
-                                label={item.name}
-                            />
-                            <span className="authen__error">{errors[item.name]?.message}</span>
-                        </Box>
+                        <div className="form__wrapper" key={index}>
+                            <label htmlFor="">{item.name.toUpperCase()}</label>
+                            <div className="input__wrapper">
+                                <input
+                                    name={item.name}
+                                    type={item.type}
+                                    value={(detailProduct && detailProduct[item.name]) || ''}
+                                    onChange={(e) => handleInputChange(e)}
+                                    pattern={item.pattern}
+                                    required={item.required}
+                                />
+                                <span>ERROR</span>
+                            </div>
+                        </div>
                     );
                 })}
-                {/* <TextField fullWidth {...register('image01')} type="file" accept="true" />
-                <TextField fullWidth {...register('image02')} type="file" accept="true" /> */}
 
-                <Button fullWidth variant="contained" type="submit">
+                <Button fullWidth variant="contained" type="submit" onClick={(e) => onSubmit(e)}>
                     Save
                 </Button>
             </form>
+
+            <div className="product__image">
+                <img style={{ height: '300px', width: '300px' }} src={detailProduct?.image01} alt="" />
+            </div>
         </Grid>
     );
 }

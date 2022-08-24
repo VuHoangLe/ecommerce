@@ -4,8 +4,8 @@ import { useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import logo from '../../assets/images/Logo-2.png';
+import { AuthContext } from '../../context/AuthenProvider';
 import { auth } from '../../firebase/config';
-import { AuthContext } from '../context/AuthenProvider';
 
 import './header.scss';
 
@@ -35,7 +35,7 @@ function Header() {
 
     const [userAvatar, setUserAvatar] = useState();
 
-    const productQuantity = useSelector((state) => state.totalProduct.value);
+    const cartQuantity = useSelector((state) => state.totalProduct.value);
 
     const activeNav = mainNav.findIndex((e) => e.path === pathname);
 
@@ -110,7 +110,7 @@ function Header() {
                                 <Link to="/cart">
                                     <i className="bx bx-cart"></i>
                                 </Link>
-                                <div className="cart__quantity">{productQuantity}</div>
+                                <div className="cart__quantity">{cartQuantity}</div>
                             </div>
                         </div>
 

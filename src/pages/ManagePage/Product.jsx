@@ -1,20 +1,21 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Grid from '../../components/grid/Grid';
-import { deleteDocument, getDocuments } from '../../firebase/services';
+import { AppContext } from '../../context/AppProvider';
+import { deleteDocument } from '../../firebase/services';
 
 const PRODUCT_TABLE_HEADER = ['Id', 'name', 'Old price', 'New price', 'Control'];
 
 function Product() {
+    const { listProducts } = useContext(AppContext);
     const navigate = useNavigate();
     const [products, setProducts] = useState([]);
+
     useEffect(() => {
-        getDocuments('products').then((data) => {
-            setProducts(data);
-        });
-    },[products]);
+        setProducts(listProducts);
+    }, [listProducts]);
 
     return (
         <>
@@ -39,15 +40,20 @@ function Product() {
                                                 <td>{item.name}</td>
                                                 <td>{item.oldPrice}</td>
                                                 <td>{item.price}</td>
-                                                <td style={{display: 'flex', gap: '20px', fontSize: '1.75rem', cursor: 'pointer'}}>
+                                                <td
+                                                    style={{
+                                                        display: 'flex',
+                                                        gap: '20px',
+                                                        fontSize: '1.75rem',
+                                                        cursor: 'pointer',
+                                                    }}>
                                                     <i
                                                         className="bx bxs-edit"
                                                         onClick={() => navigate(`/manage/product/${item.id}`)}></i>
-                                                         <i className='bx bx-x' onClick={() => deleteDocument('products',item.docId)}></i>
+                                                    <i
+                                                        className="bx bx-x"
+                                                        onClick={() => deleteDocument('products', item.docId)}></i>
                                                 </td>
-
-                                               
-                                                
                                             </tr>
                                         );
                                     })}

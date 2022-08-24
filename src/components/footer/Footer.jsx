@@ -51,7 +51,7 @@ function Footer() {
             <div className="container">
                 <Grid col={4} mdCol={2} smCol={1} gap={10}>
                     <div>
-                        <h1 className="footer__title">Assistant Center</h1>
+                        <h1 className="footer__title">Assistant</h1>
                         <div className="footer__content">
                             <p>
                                 Contact to order: <strong>079 403 6849</strong>
