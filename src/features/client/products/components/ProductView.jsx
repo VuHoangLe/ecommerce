@@ -1,41 +1,31 @@
 import PropTypes from 'prop-types';
-import { useContext, useEffect, useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-import { arrayUnion } from 'firebase/firestore';
 import { addItem } from '../../../../redux/shopping-cart/cartItemSlice';
+import { remove } from '../../../../redux/product-modal/productModalSlice';
 
 import Button from '../../../../components/button';
-import useFireStore from '../../../../hooks/useFirestore';
+
+import { arrayUnion } from 'firebase/firestore';
 import { updateField } from '../../../../firebase/services';
-import { remove } from '../../../../redux/product-modal/productModalSlice';
-import { setTotal } from '../../../../redux/total-product/totalProductSlice';
+
 import { AuthContext } from '../../../../context/AuthenProvider';
+import { AppContext } from '../../../../context/AppProvider';
 // import { pushData } from '../../../../assets/fake-data/catagoryData';
-// import { pushData } from '../../../../assets/fake-data/productsData';
+// import { pushData as pushData1 } from '../../../../assets/fake-data/productsData';
+// import { pushData as pushData2 } from '../../../../assets/fake-data/vochers';
 
 const ProductView = ({ product }) => {
-    const [userInfomation, setUserInfomation] = useState({});
     const { hasUser } = useContext(AuthContext);
-
-    const userInfoId = hasUser ? hasUser.uid : null;
+    const { userDetails } = useContext(AppContext);
 
     // useEffect(() => {
     //     pushData();
+    //     pushData1();
+    //     pushData2();
     // }, []);
-
-    const userCondition = useMemo(() => {
-        return {
-            fieldName: 'uid',
-            operator: '==',
-            compareValue: userInfoId,
-        };
-    }, [userInfoId]);
-    const userDetails = useFireStore('users', userCondition);
-    useEffect(() => {
-        setUserInfomation(userDetails[0]);
-    }, [userDetails]);
 
     const dispatch = useDispatch();
 
@@ -61,6 +51,16 @@ const ProductView = ({ product }) => {
     const [size, setSize] = useState(undefined);
     const [quantity, setQuantity] = useState(1);
 
+    // set default product's details
+    useEffect(() => {
+        setColor(undefined);
+        setSize(undefined);
+        setQuantity(1);
+        setExpand(false);
+        setPreviewImg(product.image01);
+    }, [product]);
+
+    // show more or less description of the product
     function handleExpand() {
         setExpand(!expand);
     }
@@ -79,14 +79,7 @@ const ProductView = ({ product }) => {
         }
     };
 
-    useEffect(() => {
-        setColor(undefined);
-        setSize(undefined);
-        setQuantity(1);
-        setExpand(false);
-        setPreviewImg(product.image01);
-    }, [product]);
-
+    // validate user's select
     const check = () => {
         if (color === undefined) {
             alert('Please choose a color');
@@ -99,9 +92,11 @@ const ProductView = ({ product }) => {
         return true;
     };
 
+    // add the product to the cart
     const addToCart = () => {
         if (check()) {
             if (!hasUser) {
+                // if user's selection is valid but hasnt login yet, store the product's detail to the local storage
                 dispatch(
                     addItem({
                         color: color,
@@ -109,19 +104,19 @@ const ProductView = ({ product }) => {
                         quantity: quantity,
                         price: product.price,
                         docId: product.docId,
+                        id: product.id,
                     })
                 );
-            }
-            dispatch(setTotal());
-
-            if (userInfomation) {
-                updateField('users', userInfomation.docId, {
+            } else {
+                //user has login and user's selection is valid, update the product field in database
+                updateField('users', userDetails[0]?.docId, {
                     products: arrayUnion({
                         color: color,
                         size: size,
                         quantity: quantity,
                         price: product.price,
                         docId: product.docId,
+                        id: product.id,
                     }),
                 });
             }
@@ -133,6 +128,7 @@ const ProductView = ({ product }) => {
     const goToCart = () => {
         if (check()) {
             if (!hasUser) {
+                // if user's selection is valid but hasnt login yet, store the product's detail to the local storage
                 dispatch(
                     addItem({
                         color: color,
@@ -140,18 +136,19 @@ const ProductView = ({ product }) => {
                         quantity: quantity,
                         price: product.price,
                         docId: product?.docId,
+                        id: product.id,
                     })
                 );
-            }
-            dispatch(setTotal());
-            if (userInfomation) {
-                updateField('users', userInfomation.docId, {
+            } else {
+                //user has login and user's selection is valid, update the product field in database
+                updateField('users', userDetails[0]?.docId, {
                     products: arrayUnion({
                         color: color,
                         size: size,
                         quantity: quantity,
                         price: product.price,
                         docId: product.docId,
+                        id: product.id,
                     }),
                 });
             }

@@ -1,44 +1,42 @@
 import { useEffect, useState, useRef, useCallback, useContext } from 'react';
 
-import Helmet from '../../components/Helmet';
-import Button from '../../components/button';
-import Checkbox from '../../components/checkbox/Checkbox';
+import { CircularProgress } from '@mui/material';
 
+import { AppContext } from '../../context/AppProvider';
 import productColor from '../../assets/fake-data/product-color';
 import productSize from '../../assets/fake-data/product-size';
 
+import Helmet from '../../components/Helmet';
+import Button from '../../components/button';
+import Checkbox from '../../components/checkbox';
+
 import '../../features/client/categories/components/catalog.scss';
-
-import Grid from '../../components/grid/Grid';
-import { CircularProgress } from '@mui/material';
-import { AppContext } from '../../context/AppProvider';
-
-import { ProductCard } from '../../features/client/products';
+import Pagination from '../../components/pagination';
 
 function Catalog() {
     const { listProducts, categoryItems } = useContext(AppContext);
     const [allProducts, setAllProducts] = useState(listProducts);
 
+    // init user's filter sellection
     const [filterCatalog, setFilterCatalog] = useState({
         category: [],
         color: [],
         size: [],
     });
 
+    // show or hide filter bar
     const filterRef = useRef(null);
 
     const controlFilter = () => {
         filterRef.current.classList.toggle('active');
     };
 
+    // remove user's filter sellection
     const clearFilter = () => {
         setFilterCatalog({ category: [], color: [], size: [] });
     };
 
-    useEffect(() => {
-        setAllProducts(listProducts);
-    }, [listProducts]);
-
+    // save user's selection
     const filterSelected = (type, checked, item) => {
         if (checked) {
             switch (type) {
@@ -55,6 +53,7 @@ function Catalog() {
                     setFilterCatalog({ ...filterCatalog });
             }
         } else {
+            // remove un-sellect products
             switch (type) {
                 case 'CATEGORY':
                     const newFilterCata = filterCatalog.category.filter((elmt) => elmt !== item.id);
@@ -74,6 +73,7 @@ function Catalog() {
         }
     };
 
+    // render products with user's filter sellection
     const rerenderProducts = useCallback(() => {
         let temp = listProducts;
         if (filterCatalog.category.length) {
@@ -94,6 +94,7 @@ function Catalog() {
         setAllProducts(temp);
     }, [filterCatalog, listProducts]);
 
+    // render products every time user filter
     useEffect(() => {
         rerenderProducts();
     }, [rerenderProducts]);
@@ -117,8 +118,8 @@ function Catalog() {
                                         <div key={index} className="catalog__filter__widget__content__item">
                                             <Checkbox
                                                 label={item.name}
-                                                onChange={(input) => filterSelected('CATEGORY', input.checked, item)}
                                                 checked={filterCatalog.category.includes(item.id)}
+                                                onChange={(elmt) => filterSelected('CATEGORY', elmt.checked, item)}
                                             />
                                         </div>
                                     ))}
@@ -134,8 +135,8 @@ function Catalog() {
                                         <div key={index} className="catalog__filter__widget__content__item">
                                             <Checkbox
                                                 label={item.name}
-                                                onChange={(input) => filterSelected('COLOR', input.checked, item)}
                                                 checked={filterCatalog.color.includes(item.color)}
+                                                onChange={(elmt) => filterSelected('COLOR', elmt.checked, item)}
                                             />
                                         </div>
                                     ))}
@@ -151,8 +152,8 @@ function Catalog() {
                                         <div key={index} className="catalog__filter__widget__content__item">
                                             <Checkbox
                                                 label={item.name}
-                                                onChange={(input) => filterSelected('SIZE', input.checked, item)}
                                                 checked={filterCatalog.size.includes(item.size)}
+                                                onChange={(elmt) => filterSelected('SIZE', elmt.checked, item)}
                                             />
                                         </div>
                                     ))}
@@ -172,22 +173,19 @@ function Catalog() {
                                 Filter
                             </Button>
                         </div>
-                        <div className="catalog__content">
-                            {/* <InfinityList data={allProducts} perload={6} /> */}
-                            <Grid col={3} mdCol={2} smCol={1} gap={20}>
-                                {allProducts.map((item, index) => (
-                                    <ProductCard
-                                        key={index}
-                                        img01={item.image01}
-                                        img02={item.image02}
-                                        name={item.name}
-                                        price={Number(item.price)}
-                                        slug={item.slug}
-                                        oldPrice={item.oldPrice}
-                                    />
-                                ))}
-                            </Grid>
-                        </div>
+
+                        {!allProducts.length ? (
+                            <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                                <img
+                                    src="https://www.dokantec.com/resources/assets/front/images/no-product-found.png"
+                                    alt=""
+                                />
+                            </div>
+                        ) : (
+                            <div className="catalog__content">
+                                <Pagination data={allProducts} limit={6} />
+                            </div>
+                        )}
                     </div>
                 </Helmet>
             ) : (

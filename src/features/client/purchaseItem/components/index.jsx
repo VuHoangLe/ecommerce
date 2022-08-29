@@ -3,6 +3,8 @@ import { getDocumentById } from '../../../../firebase/services';
 
 function PurchaseItem({ product }) {
     const [purchaseProduct, setPurchaseProduct] = useState([]);
+
+    // get the product's details from database by document id
     useEffect(() => {
         async function fetchData() {
             const response = await getDocumentById('products', product.docId);
@@ -10,7 +12,6 @@ function PurchaseItem({ product }) {
         }
         fetchData();
     }, [product]);
-    console.log(purchaseProduct);
     return (
         <div className="purchase__item">
             <div className="purchase__item__preview">

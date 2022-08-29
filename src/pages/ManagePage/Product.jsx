@@ -1,25 +1,30 @@
-import React, { useContext } from 'react';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Grid from '../../components/grid/Grid';
-import { AppContext } from '../../context/AppProvider';
-import { deleteDocument } from '../../firebase/services';
+
+import Grid from '../../components/grid';
+import Button from '../../components/button';
+
+import { deleteDocument, getDocuments } from '../../firebase/services';
 
 const PRODUCT_TABLE_HEADER = ['Id', 'name', 'Old price', 'New price', 'Control'];
 
 function Product() {
-    const { listProducts } = useContext(AppContext);
     const navigate = useNavigate();
+
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        setProducts(listProducts);
-    }, [listProducts]);
+        getDocuments('products').then((data) => {
+            setProducts(data);
+        });
+    }, [products]);
 
     return (
         <>
             <h2 className="pageheader">Products</h2>
+            <div style={{ marginBottom: '30px' }}>
+                <Button onClick={() => navigate(`/manage/product/create`)}>Add products</Button>
+            </div>
             <Grid col={1}>
                 <div className="card">
                     <div className="card__body">

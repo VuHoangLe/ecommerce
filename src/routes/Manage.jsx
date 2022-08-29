@@ -1,13 +1,9 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import EditProduct from '../features/manage/manage-product/components/EditProduct';
+import NewProduct from '../features/manage/manage-product/components/NewProduct';
 import ManageLayOut from '../layouts/manage/ManageLayOut';
-import Analytic from '../pages/ManagePage/Analytic';
-
-import Customers from '../pages/ManagePage/Customers';
-import Dashboard from '../pages/ManagePage/Dashboard';
-import Order from '../pages/ManagePage/Order';
-import Product from '../pages/ManagePage/Product';
-import ProductItem from '../pages/ManagePage/ProductItem';
+import { Analytic, Customers, Dashboard, Order, Product } from '../pages/ManagePage';
 
 function Manage() {
     return (
@@ -41,10 +37,20 @@ function Manage() {
                 path="/product/:id"
                 element={
                     <ManageLayOut>
-                        <ProductItem />
+                        <EditProduct />
                     </ManageLayOut>
                 }
             />
+
+            <Route
+                path="/product/create"
+                element={
+                    <ManageLayOut>
+                        <NewProduct />
+                    </ManageLayOut>
+                }
+            />
+
             <Route
                 path="/order"
                 element={

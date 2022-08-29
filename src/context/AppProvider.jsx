@@ -14,32 +14,35 @@ function AppProvider({ children }) {
 
     const [categoryItems, setCategoryItems] = useState([]);
 
-    const [userId, setUserId] = useState(hasUser ? hasUser.uid : null);
-
     const [productLocal, setProductLocal] = useState(products ? products : []);
 
+    const [turnOver, setTurnOver] = useState([]);
+
+    const [order, setOrder] = useState([]);
+
+    const [listUsers, setListUsers] = useState([]);
+
+    const [vouchers, setVouchers] = useState([]);
+
+    // set the product that user select into state if user hasn't login yet
     useEffect(() => {
         if (!hasUser) {
             setProductLocal(products);
         }
     }, [hasUser, products]);
 
-    useEffect(() => {
-        if (hasUser) {
-            setUserId(hasUser.uid);
-        }
-    }, [hasUser]);
-
+    // get all infomations of the current user
     const userCondition = useMemo(() => {
         return {
             fieldName: 'uid',
             operator: '==',
-            compareValue: userId,
+            compareValue: hasUser ? hasUser.uid : null,
         };
-    }, [userId]);
+    }, [hasUser]);
 
     const userDetails = useFireStore('users', userCondition);
 
+    // get all products from firestore
     useEffect(() => {
         async function fetchData() {
             const response = await getDocuments('products');
@@ -48,6 +51,7 @@ function AppProvider({ children }) {
         fetchData();
     }, []);
 
+    // get category data from firestore
     useEffect(() => {
         async function fetchData() {
             const response = await getDocuments('categories');
@@ -56,6 +60,7 @@ function AppProvider({ children }) {
         fetchData();
     }, []);
 
+    // funtion random product
     const randomProducts = useCallback(
         (count) => {
             const max = listProducts.length - count;
@@ -66,9 +71,56 @@ function AppProvider({ children }) {
         [listProducts]
     );
 
+    // get turnover datas
+    useEffect(() => {
+        async function fetchData() {
+            const response = await getDocuments('turnovers');
+            setTurnOver(response);
+        }
+        fetchData();
+    }, []);
+
+    // get order datas
+    useEffect(() => {
+        async function fetchData() {
+            const response = await getDocuments('orders');
+            setOrder(response);
+        }
+        fetchData();
+    }, []);
+
+    //get list users
+    useEffect(() => {
+        async function fetchData() {
+            const response = await getDocuments('users');
+            setListUsers(response);
+        }
+        fetchData();
+    }, []);
+
+    // get list vouchers
+    useEffect(() => {
+        async function fetchData() {
+            const response = await getDocuments('vouchers');
+            setVouchers(response);
+        }
+        fetchData();
+    }, []);
+
     return (
         <AppContext.Provider
-            value={{ listProducts, randomProducts, categoryItems, userDetails, productLocal, setProductLocal }}>
+            value={{
+                listProducts,
+                randomProducts,
+                categoryItems,
+                userDetails,
+                productLocal,
+                setProductLocal,
+                turnOver,
+                order,
+                listUsers,
+                vouchers,
+            }}>
             {children}
         </AppContext.Provider>
     );

@@ -1,6 +1,6 @@
 import React from 'react';
-import Grid from '../../components/grid/Grid';
-import Table from '../../components/manage/table';
+import Grid from '../../components/grid';
+import Table from '../../components/table';
 function Customers() {
     return (
         <>

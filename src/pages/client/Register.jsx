@@ -22,34 +22,6 @@ import { FacebookAuthProvider, getAdditionalUserInfo, signInWithPopup } from 'fi
 function Register() {
     const navigate = useNavigate();
 
-    // Yup schema
-    const schema = yup.object({
-        userName: yup
-            .string()
-            .required('User name is required')
-            .min(3, 'User name has at least 3 characters')
-            .max(14, 'User name cannot exceed more than 14 characters'),
-        email: yup.string().email('Invalid email format').required('Email is required'),
-        password: yup
-            .string()
-            .required('Password is required')
-            .min(6, 'Password has at least 6 characters')
-            .max(14, 'Password cannot exceed more than 14 characters'),
-        rePassword: yup
-            .string()
-            .required('Confirm Password is required')
-            .oneOf([yup.ref('password')], 'Passwords do not match'),
-    });
-
-    // react-hook-form use yup schema
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm({
-        resolver: yupResolver(schema),
-    });
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [displayName, setDisplayName] = useState('');
@@ -62,6 +34,7 @@ function Register() {
             const user = userCredential.user;
             updateProfile(auth.currentUser, {
                 displayName: displayName,
+                photoURL: 'https://cdn-icons-png.flaticon.com/512/149/149071.png',
             }).then(() => {
                 addDocument('users', {
                     displayName: user.displayName,
@@ -114,6 +87,34 @@ function Register() {
                 console.log('login with fb fail');
             });
     };
+
+    // validate
+    const schema = yup.object({
+        userName: yup
+            .string()
+            .required('User name is required')
+            .min(3, 'User name has at least 3 characters')
+            .max(14, 'User name cannot exceed more than 14 characters'),
+        email: yup.string().email('Invalid email format').required('Email is required'),
+        password: yup
+            .string()
+            .required('Password is required')
+            .min(6, 'Password has at least 6 characters')
+            .max(14, 'Password cannot exceed more than 14 characters'),
+        rePassword: yup
+            .string()
+            .required('Confirm Password is required')
+            .oneOf([yup.ref('password')], 'Passwords do not match'),
+    });
+
+    // react-hook-form use yup schema
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        resolver: yupResolver(schema),
+    });
 
     const onSubmit = (data) => {
         setEmail(data.email);

@@ -1,0 +1,29 @@
+@use '../../assets/scss/' as *;
+.pagination {
+    @include flex(center, flex-end);
+    width: 100%;
+    margin-top: 20px;
+    gap: 20px;
+
+    &-item {
+        @include flex(center, center);
+
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+
+        cursor: pointer;
+
+        &:hover {
+            color: $txt-white;
+            background-color: #62b4ff;
+        }
+
+        &.active,
+        .active:hover {
+            background-color: $main-color;
+            color: $txt-white;
+            font-weight: 600;
+        }
+    }
+}

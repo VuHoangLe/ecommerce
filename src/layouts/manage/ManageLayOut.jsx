@@ -1,6 +1,6 @@
 import React from 'react';
-import Sidebar from '../../components/manage/sidebar/Sidebar';
-import TopNav from '../../components/manage/topnav/TopNav';
+import { Sidebar } from '../../features/manage/sidebar';
+import TopNav from '../../features/manage/topnav/components';
 import './managelayout.scss';
 
 function ManageLayOut({ children }) {

@@ -7,7 +7,7 @@ const initialState = {
 };
 
 const delItem = (state, item) => {
-    return state.filter((e) => e.slug !== item.slug || e.color !== item.color || e.size !== item.size);
+    return state.filter((e) => e.docId !== item.docId || e.color !== item.color || e.size !== item.size);
 };
 
 export const cartItemsSlice = createSlice({
@@ -25,7 +25,7 @@ export const cartItemsSlice = createSlice({
 
             if (isDuplicated) {
                 let temp = state.value.map((elmt) => {
-                    if (elmt.docId === newItem.docId) {
+                    if (elmt.docId === newItem.docId && newItem.color === elmt.color && newItem.size === elmt.size) {
                         elmt.quantity += newItem.quantity;
                     }
                     return elmt;
@@ -46,7 +46,11 @@ export const cartItemsSlice = createSlice({
             const itemUpdate = action.payload;
 
             let temp = state.value.map((elmt) => {
-                if (elmt.docId === itemUpdate.docId) {
+                if (
+                    elmt.docId === itemUpdate.docId &&
+                    itemUpdate.color === elmt.color &&
+                    itemUpdate.size === elmt.size
+                ) {
                     elmt.quantity = itemUpdate.quantity;
                 }
                 return elmt;

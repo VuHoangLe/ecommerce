@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useForm } from 'react-hook-form';
@@ -9,41 +10,25 @@ import Button from '@mui/material/Button';
 import { Box, IconButton, Typography } from '@mui/material';
 import FacebookIcon from '@mui/icons-material/Facebook';
 
-import { FacebookAuthProvider, getAdditionalUserInfo, signInWithPopup } from 'firebase/auth';
+import {
+    FacebookAuthProvider,
+    getAdditionalUserInfo,
+    signInWithPopup,
+    signInWithEmailAndPassword,
+} from 'firebase/auth';
 
-import { signInWithEmailAndPassword } from 'firebase/auth';
-
-import Helmet from '../../components/Helmet';
-import '../../features/client/authentication/components/authen.scss';
-import { useState, useEffect } from 'react';
 import { addDocument } from '../../firebase/services';
 import { auth } from '../../firebase/config';
+
+import Helmet from '../../components/Helmet';
+
+import '../../features/client/authentication/components/authen.scss';
 
 function Login() {
     const navigate = useNavigate();
 
-    // valid form
-    const schema = yup.object({
-        email: yup.string().email('Invalid email format').required('Email is required'),
-        password: yup
-            .string()
-            .required('Password is required')
-            .min(6, 'Password has at least 6 characters')
-            .max(14, 'Password cannot exceed more than 14 characters'),
-    });
-
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm({
-        resolver: yupResolver(schema),
-    });
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    // sign in with email and password
 
     useEffect(() => {
         signInWithEmailAndPassword(auth, email, password)
@@ -92,6 +77,26 @@ function Login() {
             .catch((error) => {});
     };
     //End
+
+    // valid form
+    const schema = yup.object({
+        email: yup.string().email('Invalid email format').required('Email is required'),
+        password: yup
+            .string()
+            .required('Password is required')
+            .min(6, 'Password has at least 6 characters')
+            .max(14, 'Password cannot exceed more than 14 characters'),
+    });
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        resolver: yupResolver(schema),
+    });
+
+    // sign in with email and password
 
     const onSubmit = (data) => {
         setEmail(data.email);

@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import { arrayRemove } from 'firebase/firestore';
 import { removeItem, updateItem } from '../../../../redux/shopping-cart/cartItemSlice';
 import { getDocumentById, updateField } from '../../../../firebase/services';
-import { removeTotal } from '../../../../redux/total-product/totalProductSlice';
 
 const CartItems = ({ cartItems, userDetails, data, isGuest }) => {
     const dispatch = useDispatch();
@@ -15,6 +14,10 @@ const CartItems = ({ cartItems, userDetails, data, isGuest }) => {
     const [productDetail, setProductDetail] = useState([]);
     const docId = cartItems.docId;
 
+    console.log(data);
+    console.log(cartItems);
+
+    // get product's details by document id
     useEffect(() => {
         getDocumentById('products', docId).then((data) => {
             setProductDetail(data);
@@ -26,17 +29,22 @@ const CartItems = ({ cartItems, userDetails, data, isGuest }) => {
         setQuantity(cartItems.quantity);
     }, [cartItems]);
 
+    // handle quantity update
     const updateQuantity = (type) => {
         if (type === '+') {
             if (isGuest) {
+                // spread prev state and update quantity
                 dispatch(updateItem({ ...item, quantity: quantity + 1 }));
             } else {
+                // get all products that user select, compare the document id then update quantity
                 let update = data.map((elmt) => {
                     if (elmt.docId === item.docId) {
                         elmt.quantity += 1;
                     }
                     return elmt;
                 });
+
+                // update products field
                 updateField('users', userDetails.docId, {
                     products: [...update],
                 });
@@ -44,14 +52,17 @@ const CartItems = ({ cartItems, userDetails, data, isGuest }) => {
         }
         if (type === '-') {
             if (isGuest) {
+                // spread prev state and update quantity
                 dispatch(updateItem({ ...item, quantity: quantity - 1 === 0 ? 1 : quantity - 1 }));
             } else {
+                // get all products that user select, compare the document id then update quantity
                 let update = data.map((elmt) => {
                     if (elmt.docId === item.docId) {
                         elmt.quantity = quantity - 1 === 0 ? 1 : quantity - 1;
                     }
                     return elmt;
                 });
+                // update products field
                 updateField('users', userDetails.docId, {
                     products: [...update],
                 });
@@ -59,15 +70,17 @@ const CartItems = ({ cartItems, userDetails, data, isGuest }) => {
         }
     };
 
+    // remove the product that user select
     const removeCartItem = () => {
         if (isGuest) {
+            // remove product in local storage
             dispatch(removeItem(item));
         } else {
+            // delete product user select in database
             updateField('users', userDetails?.docId, {
                 products: arrayRemove(item),
             });
         }
-        dispatch(removeTotal());
     };
 
     return (

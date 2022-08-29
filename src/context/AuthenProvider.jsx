@@ -8,17 +8,16 @@ export const AuthContext = createContext();
 function AuthenProvider({ children }) {
     const [isLoading, setIsLoading] = useState(true);
     const [hasUser, setHasUser] = useState(null);
+
+    //check user status
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 const { displayName, email, uid, photoURL } = user;
-                console.log('login');
                 setHasUser({ displayName, email, uid, photoURL });
                 setIsLoading(false);
             } else {
                 setHasUser(null);
-                console.log('log out');
-                // dispatch(delUser());
                 setIsLoading(false);
             }
         });

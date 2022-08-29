@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import ClientLayout from '../layouts/ClientLayOut';
 import { Cart, Catalog, Home, Login, Product, Purchase, Register } from '../pages/client';
+import Profile from '../pages/client/Profile';
 function Client() {
     return (
         <Routes>
@@ -61,6 +62,16 @@ function Client() {
                     </ClientLayout>
                 }
             />
+
+            <Route
+                path="/profile/:id"
+                element={
+                    <ClientLayout>
+                        <Profile />
+                    </ClientLayout>
+                }
+            />
+
             <Route path="/contact" element={<ClientLayout></ClientLayout>} />
             <Route path="/accessories" element={<ClientLayout></ClientLayout>} />
         </Routes>

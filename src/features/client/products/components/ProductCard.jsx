@@ -9,6 +9,8 @@ import './product.scss';
 
 const ProductCard = ({ img01, img02, name, price, slug, oldPrice }) => {
     const dispatch = useDispatch();
+
+    //set product slug into redux store
     const setSlug = () => {
         dispatch(set(slug));
     };
@@ -42,9 +44,7 @@ ProductCard.propTypes = {
     img01: PropTypes.string.isRequired,
     img02: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
     slug: PropTypes.string.isRequired,
-    oldPrice: PropTypes.number.isRequired,
 };
 
 export default ProductCard;

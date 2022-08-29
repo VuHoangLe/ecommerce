@@ -1,16 +1,14 @@
 import { useState, useEffect, useContext } from 'react';
 import Helmet from '../../components/Helmet';
 import { AppContext } from '../../context/AppProvider';
+import { Section, SectionBody, SectionTitle } from '../../features/client/section';
 
-import Slider from '../../components/slider/Slider';
-import Policy from '../../features/client/policies/components/PolicyCard';
+import { Slider } from '../../features/client/slider';
+import PolicyCard from '../../features/client/policies/components';
 import SliderData from '../../assets/fake-data/slider';
-import Section from '../../features/client/section/Section';
-import SectionBody from '../../features/client/section/SectionBody';
-import Grid from '../../components/grid/Grid';
+import Grid from '../../components/grid';
 import PolicyData from '../../assets/fake-data/policy';
 import { Link } from 'react-router-dom';
-import SectionTitle from '../../features/client/section/SectionTitle';
 import banner from '../../assets/images/banner.png';
 import ProductCard from '../../features/client/products/components/ProductCard';
 
@@ -37,13 +35,13 @@ function Home() {
             {/* Slider */}
             <Slider data={SliderData} control></Slider>
 
-            {/*Section Policy */}
+            {/*Section PolicyCard */}
             <Section>
                 <SectionBody>
                     <Grid col={4} mdCol={2} smCol={1} gap={20}>
                         {PolicyData.map((item, index) => (
                             <Link to="/policy" key={index}>
-                                <Policy name={item.name} description={item.description} icon={item.icon} />
+                                <PolicyCard name={item.name} description={item.description} icon={item.icon} />
                             </Link>
                         ))}
                     </Grid>

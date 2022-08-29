@@ -38,9 +38,9 @@
         color: $txt-white;
 
         border: 1px solid $main-color;
-    }
 
-    input:checked ~ &__checkmark > i {
-        transform: scale(1);
+        & > i {
+            transform: scale(1);
+        }
     }
 }

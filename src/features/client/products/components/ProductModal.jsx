@@ -9,9 +9,11 @@ import { remove } from '../../../../redux/product-modal/productModalSlice';
 import useFireStore from '../../../../hooks/useFirestore';
 
 const ProductModal = () => {
+    // get product slug that user select
     const dispatch = useDispatch();
     const productSlug = useSelector((state) => state.productModal.value);
 
+    // get product's details
     const productCondition = useMemo(() => {
         return {
             fieldName: 'slug',

@@ -3,6 +3,7 @@ import { collection, query, where, onSnapshot } from 'firebase/firestore';
 
 import { db } from '../firebase/config';
 
+// custom hook: listen realtime to data in firestore
 function useFireStore(collections, condition) {
     const [documents, setDocuments] = useState([]);
     useEffect(() => {

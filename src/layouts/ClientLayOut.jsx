@@ -1,6 +1,6 @@
 import React from 'react';
-import Footer from '../components/footer/Footer';
-import Header from '../components/header/Header';
+import Footer from '../components/footer';
+import Header from '../components/header';
 
 function ClientLayout({ children }) {
     return (

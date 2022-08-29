@@ -1,0 +1,57 @@
+@use '../../../../assets/scss/' as *;
+
+.statuscard {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+
+    @include flex(center, flex-start);
+    padding: 30px;
+    margin-bottom: 30px;
+
+    border-radius: $border-radius;
+    background-color: $main-bg;
+    box-shadow: $box-shadow;
+    transition: color 0.25s ease;
+
+    &::before {
+        content: '';
+        position: absolute;
+        left: -50%;
+        top: 0;
+        width: 100%;
+        padding-top: 100%;
+        border-radius: 50%;
+        background-image: linear-gradient(to top right, $admin-main-color, $admin-second-color);
+        transform: scale(0);
+        transition: transform 0.5s linear;
+    }
+
+    &:hover::before {
+        transform: scale(3);
+    }
+
+    &:hover {
+        color: $txt-white;
+    }
+
+    &__icon {
+        width: 30%;
+        height: 100%;
+        @include flex(center, center);
+        font-size: 2.5rem;
+        z-index: 1;
+    }
+
+    &__detail {
+        flex-grow: 1;
+        text-align: center;
+        text-transform: capitalize;
+        z-index: 1;
+
+        & > h4 {
+            font-size: 2.75rem;
+            margin-bottom: 12px;
+        }
+    }
+}

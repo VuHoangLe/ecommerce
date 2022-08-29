@@ -1,14 +1,15 @@
-import React, { useEffect, useState, useContext, useMemo } from 'react';
+import { useEffect, useState, useContext, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
-import Grid from '../../components/grid/Grid';
-// import ProductCard from '../../features/client/products/component/ProductCard';
-import { ProductCard, ProductView } from '../../features/client/products';
+import { AppContext } from '../../context/AppProvider';
 
 import useFireStore from '../../hooks/useFirestore';
-import { AppContext } from '../../context/AppProvider';
+
 import Helmet from '../../components/Helmet';
+import Grid from '../../components/grid';
+
 import { Section, SectionBody, SectionTitle } from '../../features/client/section';
+import { ProductCard, ProductView } from '../../features/client/products';
 
 const Product = () => {
     let params = useParams();
@@ -18,6 +19,7 @@ const Product = () => {
         setMoreProducts(randomProducts(8));
     }, [randomProducts]);
 
+    // Get product by slug
     const condition = useMemo(() => {
         return {
             fieldName: 'slug',
@@ -27,12 +29,14 @@ const Product = () => {
     }, [params.slug]);
     const productBySlug = useFireStore('products', condition);
 
+    console.log(productBySlug);
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [productBySlug]);
 
     return (
-        <Helmet title={productBySlug.map((item) => item.name)}>
+        <Helmet title={productBySlug[0]?.name}>
             <Section>
                 <SectionBody>
                     <ProductView product={productBySlug[0]} />
