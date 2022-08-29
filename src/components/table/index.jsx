@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './table.scss';
 function Table({ headData, renderHead, bodyData, renderBody, limit }) {
-    const initDataShow = limit && bodyData ? bodyData.slice(0, Number(limit)) : bodyData;
-
-    const [dataShow, setDataShow] = useState(initDataShow);
-
+    const [dataShow, setDataShow] = useState([]);
+    useEffect(() => {
+        setDataShow(limit && bodyData ? bodyData.slice(0, Number(limit)) : bodyData);
+    }, [bodyData, limit]);
     let pages = 1;
-
     let range = [];
 
     if (limit !== undefined) {
@@ -43,7 +42,7 @@ function Table({ headData, renderHead, bodyData, renderBody, limit }) {
                     {/* get the body data and render */}
                     {bodyData && renderBody ? (
                         <tbody>
-                            {bodyData.map((item, index) => {
+                            {dataShow.map((item, index) => {
                                 return renderBody(item, index);
                             })}
                         </tbody>
@@ -59,7 +58,6 @@ function Table({ headData, renderHead, bodyData, renderBody, limit }) {
                             className={`pagination-item ${currPage === index ? 'active' : ''}`}
                             onClick={() => {
                                 selectPage(index);
-                                window.scrollTo(0, 0);
                             }}>
                             {item + 1}
                         </div>

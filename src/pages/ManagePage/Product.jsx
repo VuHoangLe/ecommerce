@@ -1,23 +1,43 @@
-import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Grid from '../../components/grid';
 import Button from '../../components/button';
 
-import { deleteDocument, getDocuments } from '../../firebase/services';
+import { deleteDocument } from '../../firebase/services';
+import Table from '../../components/table';
+import { useContext } from 'react';
+import { AppContext } from '../../context/AppProvider';
 
 const PRODUCT_TABLE_HEADER = ['Id', 'name', 'Old price', 'New price', 'Control'];
 
 function Product() {
     const navigate = useNavigate();
 
-    const [products, setProducts] = useState([]);
+    const renderHead = (item, index) => {
+        return <th key={index}>{item}</th>;
+    };
 
-    useEffect(() => {
-        getDocuments('products').then((data) => {
-            setProducts(data);
-        });
-    }, [products]);
+    const renderBody = (item, index) => {
+        return (
+            <tr key={index}>
+                <td>{item.id}</td>
+                <td>{item.name}</td>
+                <td>{item.oldPrice}</td>
+                <td>{item.price}</td>
+                <td
+                    style={{
+                        display: 'flex',
+                        gap: '20px',
+                        fontSize: '1.75rem',
+                        cursor: 'pointer',
+                    }}>
+                    <i className="bx bxs-edit" onClick={() => navigate(`/manage/product/${item.id}`)}></i>
+                    <i className="bx bx-x" onClick={() => deleteDocument('products', item.docId)}></i>
+                </td>
+            </tr>
+        );
+    };
+    const { listProducts } = useContext(AppContext);
 
     return (
         <>
@@ -28,43 +48,13 @@ function Product() {
             <Grid col={1}>
                 <div className="card">
                     <div className="card__body">
-                        <div className="table-wrapper">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        {PRODUCT_TABLE_HEADER.map((item, index) => {
-                                            return <th key={index}>{item}</th>;
-                                        })}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {products.map((item, index) => {
-                                        return (
-                                            <tr key={index}>
-                                                <td>{item.id}</td>
-                                                <td>{item.name}</td>
-                                                <td>{item.oldPrice}</td>
-                                                <td>{item.price}</td>
-                                                <td
-                                                    style={{
-                                                        display: 'flex',
-                                                        gap: '20px',
-                                                        fontSize: '1.75rem',
-                                                        cursor: 'pointer',
-                                                    }}>
-                                                    <i
-                                                        className="bx bxs-edit"
-                                                        onClick={() => navigate(`/manage/product/${item.id}`)}></i>
-                                                    <i
-                                                        className="bx bx-x"
-                                                        onClick={() => deleteDocument('products', item.docId)}></i>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
+                        <Table
+                            headData={PRODUCT_TABLE_HEADER}
+                            renderHead={(item, index) => renderHead(item, index)}
+                            bodyData={listProducts}
+                            renderBody={(item, index) => renderBody(item, index)}
+                            limit={10}
+                        />
                     </div>
                 </div>
             </Grid>
