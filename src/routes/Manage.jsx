@@ -59,14 +59,6 @@ function Manage() {
                     </ManageLayOut>
                 }
             />
-            <Route
-                path="/analytic"
-                element={
-                    <ManageLayOut>
-                        <Analytic />
-                    </ManageLayOut>
-                }
-            />
         </Routes>
     );
 }

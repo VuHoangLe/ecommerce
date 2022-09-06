@@ -5,6 +5,8 @@
 /.pnp
 .pnp.js
 
+/boxicons-2.0.7
+
 # testing
 /coverage
 

@@ -128,7 +128,7 @@ function Profile() {
                 <Typography variant="h3" className="edit__form__title">
                     Avatar preview
                 </Typography>
-                <img style={{ height: '300px', width: '300px' }} src={updateUser?.photoURL} alt="" />
+                <img className="avatar-preview" src={updateUser?.photoURL} alt="" />
             </div>
         </Grid>
     );

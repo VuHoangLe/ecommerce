@@ -10,6 +10,7 @@ import {
     query,
     deleteDoc,
     updateDoc,
+    orderBy,
 } from 'firebase/firestore';
 import { db } from './config';
 
@@ -45,7 +46,9 @@ const getDocumentById = async (name, id) => {
 
 // get all data from collection
 const getDocuments = async (name, quantity) => {
-    const q = quantity ? query(collection(db, name), limit(quantity)) : query(collection(db, name));
+    const q = quantity
+        ? query(collection(db, name), limit(quantity), orderBy('createAt'))
+        : query(collection(db, name));
     const querySnapshot = await getDocs(q);
     const documents = [];
     querySnapshot.forEach((doc) => {

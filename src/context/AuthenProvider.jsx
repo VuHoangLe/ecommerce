@@ -11,7 +11,7 @@ function AuthenProvider({ children }) {
 
     //check user status
     useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 const { displayName, email, uid, photoURL } = user;
                 setHasUser({ displayName, email, uid, photoURL });
@@ -21,7 +21,11 @@ function AuthenProvider({ children }) {
                 setIsLoading(false);
             }
         });
+        return () => {
+            unsubscribe();
+        };
     }, []);
+
     return (
         <AuthContext.Provider value={{ hasUser }}>
             {isLoading ? <CircularProgress color="secondary" /> : children}

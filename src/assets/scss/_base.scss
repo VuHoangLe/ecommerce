@@ -156,3 +156,12 @@ i {
     text-align: center;
     text-transform: capitalize;
 }
+
+.avatar-preview {
+    height: 300px;
+    width: 300px;
+
+    @include tablet {
+        width: 100%;
+    }
+}

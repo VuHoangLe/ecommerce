@@ -20,10 +20,6 @@ const SIDEBAR_ITEMS = [
         name: 'Orders',
         route: '/manage/order',
     },
-    {
-        name: 'Analytics',
-        route: '/manage/analytic',
-    },
 ];
 function Sidebar() {
     const pathName = useLocation().pathname;

@@ -68,6 +68,8 @@ function Purchase() {
 
             // update order status
             updateField('orders', purchaseId, {
+                address: userDetails[0]?.address,
+                phone: userDetails[0]?.phone,
                 status: 'shipping',
             });
             alert('thanks for buying');

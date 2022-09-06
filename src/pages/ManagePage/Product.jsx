@@ -16,7 +16,6 @@ function Product() {
     const renderHead = (item, index) => {
         return <th key={index}>{item}</th>;
     };
-
     const renderBody = (item, index) => {
         return (
             <tr key={index}>

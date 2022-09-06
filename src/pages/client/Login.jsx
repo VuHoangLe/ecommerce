@@ -33,6 +33,7 @@ function Login() {
     useEffect(() => {
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
+                console.log(userCredential);
                 alert('Login successfully');
                 if (window.history.state && window.history.state.idx > 0) {
                     navigate(-1);

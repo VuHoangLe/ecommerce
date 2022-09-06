@@ -13,19 +13,10 @@ import { updateField } from '../../../../firebase/services';
 
 import { AuthContext } from '../../../../context/AuthenProvider';
 import { AppContext } from '../../../../context/AppProvider';
-// import { pushData } from '../../../../assets/fake-data/catagoryData';
-// import { pushData as pushData1 } from '../../../../assets/fake-data/productsData';
-// import { pushData as pushData2 } from '../../../../assets/fake-data/vochers';
 
 const ProductView = ({ product }) => {
     const { hasUser } = useContext(AuthContext);
     const { userDetails } = useContext(AppContext);
-
-    // useEffect(() => {
-    //     pushData();
-    //     pushData1();
-    //     pushData2();
-    // }, []);
 
     const dispatch = useDispatch();
 
